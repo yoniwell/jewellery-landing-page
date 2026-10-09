@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+@theme {
+  --font-heading: 'Cinzel', 'Cormorant Garamond', serif;
+  --font-serif-lux: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+:root {
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: #05080D;
+  color: #F7F5EF;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #05080D;
+  color: #F7F5EF;
+  overflow-x: hidden;
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+h1, h2, h3, .font-heading {
+  font-family: 'Cinzel', 'Cormorant Garamond', Georgia, serif;
+  letter-spacing: 0.04em;
+}
+
+.font-serif-lux {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+/* Luxury gold gradients and shimmer effects */
+.gold-gradient-text {
+  background: linear-gradient(135deg, #F0D27A 0%, #D6A83F 50%, #A87E23 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-border-glow {
+  border-color: rgba(214, 168, 63, 0.3);
+  box-shadow: 0 0 20px rgba(214, 168, 63, 0.08);
+}
+
+.gold-border-glow:hover {
+  border-color: rgba(214, 168, 63, 0.6);
+  box-shadow: 0 0 30px rgba(214, 168, 63, 0.2);
+}
+
+.paraiba-glow {
+  box-shadow: 0 0 35px rgba(20, 241, 206, 0.15);
+}
+
+.sapphire-glow {
+  box-shadow: 0 0 35px rgba(23, 85, 175, 0.2);
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #05080D;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #0B2745;
+  border-radius: 3px;
+  border: 1px solid rgba(214, 168, 63, 0.2);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #D6A83F;
+}
+
+
