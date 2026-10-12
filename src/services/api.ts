@@ -110,6 +110,32 @@ export const api = {
     return data;
   },
 
+  async clearAllGemstones() {
+    const token = getAuthToken();
+    const res = await fetch('/api/gemstones', {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to clear gemstones');
+    return data;
+  },
+
+  async resetRealGemstones() {
+    const token = getAuthToken();
+    const res = await fetch('/api/gemstones/reset-real-data', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed to populate real gemstones');
+    return data.data as Gemstone[];
+  },
+
   // Inquiries
   async getInquiries() {
     const token = getAuthToken();

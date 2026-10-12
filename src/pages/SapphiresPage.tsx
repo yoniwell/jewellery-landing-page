@@ -7,7 +7,6 @@ interface SapphiresPageProps {
   onSelectStone: (stone: Gemstone) => void;
   onOpenInquiry: (stoneName?: string) => void;
   onOpenWhatsAppWithStone: (stoneName: string) => void;
-  onViewCertificate: (stone: Gemstone) => void;
 }
 
 export const SapphiresPage: React.FC<SapphiresPageProps> = ({
@@ -15,7 +14,6 @@ export const SapphiresPage: React.FC<SapphiresPageProps> = ({
   onSelectStone,
   onOpenInquiry,
   onOpenWhatsAppWithStone,
-  onViewCertificate,
 }) => {
   const [activeCategory, setActiveCategory] = useState<string>('ALL');
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
@@ -50,27 +48,27 @@ export const SapphiresPage: React.FC<SapphiresPageProps> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#60a5fa]/40 bg-[#071522] text-[#60a5fa] text-xs font-mono uppercase tracking-widest">
             <Gem className="w-3.5 h-3.5" />
-            <span>CEYLON TREASURES</span>
+            <span>FINE SAPPHIRES</span>
           </div>
 
           <h1 className="font-heading text-4xl sm:text-6xl font-light text-[#F7F5EF]">
-            Sri Lankan <span className="text-[#60a5fa] font-semibold">Sapphires</span> & Padparadscha
+            Natural <span className="text-[#60a5fa] font-semibold">Sapphires</span>
           </h1>
 
           <p className="font-serif-lux text-xl text-[#F0D27A] italic max-w-2xl mx-auto">
-            From vibrant Cornflower and Royal Blue to rare Ceylon Padparadscha.
+            From vibrant Cornflower and Royal Blue to rare collector hues.
           </p>
 
           <p className="text-sm sm:text-base text-[#A7ADB5] max-w-3xl mx-auto font-light leading-relaxed">
-            Sri Lanka is renowned for exceptional sapphires, from vibrant cornflower blue and royal blue to rare Padparadscha and other exceptional colors. Abel Gemstone offers selected Sri Lankan rough and finished sapphires for collectors, dealers and international jewelry buyers.
+            Renowned for exceptional natural purity and color saturation, from vibrant cornflower blue and royal blue to rare colors. Abel Gemstone offers selected rough and finished sapphires for collectors, dealers and international jewelry buyers.
           </p>
 
           <div className="pt-4 flex items-center justify-center gap-4">
             <button
-              onClick={() => onOpenInquiry('Sri Lankan Sapphires / Padparadscha Sourcing')}
+              onClick={() => onOpenInquiry('Sapphires Portfolio Sourcing')}
               className="px-6 py-3 rounded text-xs uppercase font-mono tracking-widest font-bold text-[#05080D] bg-gradient-to-r from-[#D6A83F] to-[#F0D27A] hover:shadow-[0_0_20px_rgba(214,168,63,0.4)] transition-all cursor-pointer"
             >
-              Inquire Ceylon Gemstone Portfolio
+              Inquire Sapphire Portfolio
             </button>
           </div>
         </div>
@@ -114,7 +112,7 @@ export const SapphiresPage: React.FC<SapphiresPageProps> = ({
           </div>
 
           <div className="text-[11px] sm:text-xs text-[#60a5fa] pt-1 md:pt-0 border-t md:border-t-0 border-[#0B2745] flex items-center justify-between md:justify-end">
-            <span>Showing <strong>{filteredStones.length}</strong> certified Ceylon stones</span>
+            <span>Showing <strong>{filteredStones.length}</strong> certified sapphire specimens</span>
           </div>
         </div>
       </div>
@@ -140,7 +138,7 @@ export const SapphiresPage: React.FC<SapphiresPageProps> = ({
                     {stone.weightCarats} ct
                   </span>
                   <span className="px-2 py-0.5 rounded bg-[#05080D]/85 text-[#F0D27A] text-[9px] font-mono border border-[#D6A83F]/30 backdrop-blur-sm">
-                    {stone.subCategory || 'Ceylon Sapphire'}
+                    {stone.subCategory || 'Natural Sapphire'}
                   </span>
                 </div>
 
@@ -183,16 +181,6 @@ export const SapphiresPage: React.FC<SapphiresPageProps> = ({
                     <span className="text-[#F7F5EF] truncate block">{stone.dimensions}</span>
                   </div>
                 </div>
-
-                {stone.certificate && (
-                  <button
-                    onClick={() => onViewCertificate(stone)}
-                    className="text-[11px] font-mono text-[#D6A83F] hover:text-[#F0D27A] flex items-center gap-1.5 transition-colors cursor-pointer"
-                  >
-                    <Shield className="w-3.5 h-3.5" />
-                    <span className="truncate">Report: {stone.certificate.laboratory} #{stone.certificate.reportNumber}</span>
-                  </button>
-                )}
 
                 <div className="pt-3 border-t border-[#0B2745] flex items-center justify-between gap-2">
                   <div className="min-w-0">

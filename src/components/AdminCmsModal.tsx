@@ -343,15 +343,15 @@ export const AdminCmsModal: React.FC<AdminCmsModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-[#A7ADB5] mb-1">Category *</label>
+                  <label className="block text-[#A7ADB5] mb-1">Gemstone Type *</label>
                   <select
                     value={newStone.category}
                     onChange={(e: any) => setNewStone({ ...newStone, category: e.target.value })}
                     className="w-full p-2.5 rounded bg-[#05080D] border border-[#0B2745] text-[#F7F5EF]"
                   >
                     <option value="paraiba">Ethiopian Paraíba Tourmaline</option>
-                    <option value="sapphire">Sri Lankan Sapphire</option>
-                    <option value="padparadscha">Ceylon Padparadscha</option>
+                    <option value="sapphire">Sapphire</option>
+                    <option value="padparadscha">Padparadscha Sapphire</option>
                     <option value="rough">Rough Gemstones</option>
                     <option value="emerald">African Emerald</option>
                     <option value="rare">Rare & Collector Stone</option>
@@ -401,7 +401,7 @@ export const AdminCmsModal: React.FC<AdminCmsModalProps> = ({
                     required
                     value={newStone.origin}
                     onChange={(e) => setNewStone({ ...newStone, origin: e.target.value })}
-                    placeholder="e.g., Ethiopia / Sri Lanka"
+                    placeholder="e.g., Ethiopia / Madagascar / East Africa"
                     className="w-full p-2.5 rounded bg-[#05080D] border border-[#0B2745] text-[#F7F5EF]"
                   />
                 </div>

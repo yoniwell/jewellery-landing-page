@@ -11,7 +11,7 @@ export const CuttingPolishingStory: React.FC = () => {
       title: 'ROUGH GEMSTONE SELECTION',
       subtitle: 'Evaluating Optical Potential & Geometry',
       image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=1000&auto=format&fit=crop',
-      description: 'Sourced directly in East Africa and Sri Lanka. Gemologists examine crystalline axes, pleochroism, color saturation zones, and natural inclusions under 10x to 40x darkfield immersion microscopy.',
+      description: 'Sourced directly from primary geological operations in East Africa. Gemologists examine crystalline axes, pleochroism, color saturation zones, and natural inclusions under 10x to 40x darkfield immersion microscopy.',
       metrics: [
         { label: 'Yield Assessment', val: '40% - 65% Target' },
         { label: 'Orientation', val: 'C-Axis Color Optimization' },

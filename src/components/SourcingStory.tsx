@@ -17,8 +17,8 @@ export const SourcingStory: React.FC = () => {
             <div className="relative rounded-2xl overflow-hidden border border-[#D6A83F]/30 p-1 bg-gradient-to-b from-[#0B2745] to-[#071522] shadow-2xl">
               <div className="relative rounded-xl overflow-hidden aspect-[4/5] bg-[#071522]">
                 <img
-                  src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=1200&auto=format&fit=crop"
-                  alt="East African Gemstone Exploration"
+                  src="https://images.unsplash.com/photo-1615655406736-b37c4fabf923?q=80&w=1200&auto=format&fit=crop"
+                  alt="Direct African Gemstone Sourcing and Mineral Extraction"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#05080D] via-[#05080D]/40 to-transparent" />
@@ -30,7 +30,7 @@ export const SourcingStory: React.FC = () => {
                     <span className="uppercase tracking-widest font-bold">ETHICAL DIRECT SOURCING</span>
                   </div>
                   <h4 className="font-heading text-xs sm:text-sm text-[#F7F5EF] font-semibold mt-1">
-                    East Africa & Sri Lanka Field Operations
+                    East Africa Direct Field Operations
                   </h4>
                   <p className="text-[10px] sm:text-[11px] text-[#A7ADB5] mt-1">
                     Direct access to primary geological extraction before intermediate broker markups.
@@ -50,8 +50,8 @@ export const SourcingStory: React.FC = () => {
                 <span className="block text-[9px] sm:text-[10px] text-[#A7ADB5] uppercase font-mono mt-0.5">Brokers</span>
               </div>
               <div className="p-2.5 sm:p-3 rounded-lg bg-[#071522] border border-[#0B2745]">
-                <span className="font-heading text-lg sm:text-xl font-bold text-[#60a5fa]">GIA/SSEF</span>
-                <span className="block text-[9px] sm:text-[10px] text-[#A7ADB5] uppercase font-mono mt-0.5">Lab Verified</span>
+                <span className="font-heading text-lg sm:text-xl font-bold text-[#60a5fa]">Direct</span>
+                <span className="block text-[9px] sm:text-[10px] text-[#A7ADB5] uppercase font-mono mt-0.5">Mine Custody</span>
               </div>
             </div>
           </div>
@@ -78,7 +78,7 @@ export const SourcingStory: React.FC = () => {
                 Abel Gemstone specializes in sourcing, cutting, polishing and trading exceptional colored gemstones. Our business is built around direct sourcing, careful selection and long-term relationships with international gemstone buyers.
               </p>
               <p>
-                We work with gemstone material from Africa and Sri Lanka, with a particular focus on exceptional colored stones and rare collector material. From rough material to finished gemstones, our goal is to preserve the natural character of each stone while bringing out its maximum beauty through expert cutting and polishing.
+                We work with gemstone material directly from primary deposits, with a particular focus on exceptional colored stones, sapphires, and rare collector material. From rough material to finished gemstones, our goal is to preserve the natural character of each stone while bringing out its maximum beauty through expert cutting and polishing.
               </p>
               <p>
                 Our journey begins at the source. We work close to gemstone-producing regions to identify promising material before it reaches the international market. Direct sourcing allows us to understand the material, evaluate its potential and build relationships with suppliers and buyers around the world.

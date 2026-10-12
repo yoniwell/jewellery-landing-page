@@ -15,21 +15,7 @@ export const FeaturedSapphires: React.FC<FeaturedSapphiresProps> = ({
   onSelectStone,
   onInquireStone,
 }) => {
-  const [activeCategory, setActiveCategory] = useState<string>('ALL');
-
-  const categories = [
-    'ALL',
-    'Royal Blue',
-    'Cornflower Blue',
-    'Padparadscha',
-    'Bi-Color',
-    'Yellow Sapphire',
-    'Star Sapphire',
-  ];
-
-  const filteredStones = activeCategory === 'ALL'
-    ? sapphireStones
-    : sapphireStones.filter((s) => s.subCategory === activeCategory);
+  const filteredStones = sapphireStones.slice(0, 6);
 
   return (
     <section className="py-12 sm:py-20 lg:py-24 bg-[#05080D] relative border-t border-[#0B2745]">
@@ -43,34 +29,17 @@ export const FeaturedSapphires: React.FC<FeaturedSapphiresProps> = ({
         <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12 space-y-2 sm:space-y-3">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#1755af]/40 bg-[#071522] text-[#60a5fa] text-[10px] sm:text-xs font-mono uppercase tracking-widest">
             <Gem className="w-3.5 h-3.5" />
-            <span>CEYLON TREASURES · DIRECT SOURCING</span>
+            <span>NATURAL SAPPHIRES · DIRECT SOURCING</span>
           </div>
           
           <h2 className="font-heading text-2xl sm:text-4xl lg:text-5xl font-light text-[#F7F5EF]">
-            Sri Lankan <span className="text-[#60a5fa] font-normal">Sapphires</span> & Padparadscha
+            Natural <span className="text-[#60a5fa] font-normal">Sapphires</span>
           </h2>
 
           <p className="text-xs sm:text-sm md:text-base text-[#A7ADB5] font-light leading-relaxed">
-            From vibrant Cornflower and Royal Blue to rare Ceylon Padparadscha, sourced directly for collectors and jewelry professionals.
+            From vibrant Cornflower and Royal Blue to rare unheated stones, sourced directly for collectors and jewelry professionals.
           </p>
           <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#60a5fa] to-transparent mx-auto mt-3" />
-        </div>
-
-        {/* Category Pill Filters (Smooth horizontal swipe on mobile) */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none sm:flex-wrap sm:justify-center mb-8 sm:mb-12">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-mono tracking-wider transition-all cursor-pointer whitespace-nowrap min-h-[36px] ${
-                activeCategory === cat
-                  ? 'bg-gradient-to-r from-[#1755af] to-[#0B2745] text-[#F7F5EF] border border-[#60a5fa] shadow-[0_0_15px_rgba(23,85,175,0.4)]'
-                  : 'bg-[#071522] text-[#A7ADB5] border border-[#0B2745] hover:border-[#60a5fa]/40 hover:text-[#F7F5EF]'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
         </div>
 
         {/* Sapphires Grid with Luxury Spec Cards */}
@@ -91,7 +60,7 @@ export const FeaturedSapphires: React.FC<FeaturedSapphiresProps> = ({
                 {/* Badges */}
                 <div className="absolute top-2.5 left-2.5 flex gap-1.5">
                   <span className="px-2 py-0.5 rounded bg-[#05080D]/85 text-[#60a5fa] text-[9px] font-mono border border-[#1755af]/50 backdrop-blur-sm">
-                    {stone.subCategory || 'Ceylon Sapphire'}
+                    {stone.subCategory || 'Natural Sapphire'}
                   </span>
                   <span className="px-2 py-0.5 rounded bg-[#05080D]/85 text-[#F0D27A] text-[9px] font-mono border border-[#D6A83F]/30 backdrop-blur-sm">
                     {stone.weightCarats} ct
@@ -173,7 +142,7 @@ export const FeaturedSapphires: React.FC<FeaturedSapphiresProps> = ({
             onClick={() => onViewSapphiresPage()}
             className="inline-flex items-center gap-2 px-6 sm:px-8 py-3.5 rounded-lg border border-[#60a5fa]/40 hover:border-[#60a5fa] bg-[#071522] hover:bg-[#0B2745] text-xs uppercase font-mono tracking-widest text-[#F7F5EF] transition-all cursor-pointer min-h-[44px]"
           >
-            <span>EXPLORE CEYLON SAPPHIRES</span>
+            <span>VIEW ALL GEMSTONES</span>
             <ArrowRight className="w-4 h-4 text-[#60a5fa]" />
           </button>
         </div>

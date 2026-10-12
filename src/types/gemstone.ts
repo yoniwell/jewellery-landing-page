@@ -48,7 +48,7 @@ export interface Gemstone {
   dimensions: string; // e.g., "9.45 x 7.82 x 5.12 mm"
   shapeCut: string; // e.g., "Cushion Modified Brilliant", "Oval Faceted", "Natural Octahedral Crystal"
   color: string; // e.g., "Electric Neon Blue-Green", "Velvety Royal Blue", "Sunset Lotus Pink-Orange"
-  origin: string; // e.g., "Ethiopia (Oromia Region)", "Sri Lanka (Ratnapura)", "Zambia (Kagem)"
+  origin: string; // e.g., "Ethiopia (Oromia Region)", "East Africa", "Zambia (Kagem)"
   treatment: string; // e.g., "Natural / No Indications of Heat Treatment (Unheated)", "Traditional Gentle Heat Disclosed"
   clarity: string; // e.g., "Eye Clean (VVS)", "Minor Natural Inclusions", "Transparent Gem Rough"
   priceUsd: number | null; // null for "Price on Request"

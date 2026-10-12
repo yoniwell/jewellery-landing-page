@@ -1,26 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
-  Gem, MessageSquare, Award, TrendingUp, Sparkles, PieChart, 
-  BarChart2, ArrowRight, ShieldCheck, CheckCircle2, DollarSign, 
-  Layers, ChevronRight, Activity, Flame
+  Gem, MessageSquare, ChevronRight, Sparkles, PlusCircle, ShieldCheck
 } from 'lucide-react';
 import { Gemstone, BuyerInquiry } from '../../types/gemstone';
 
 interface DashboardStatsWidgetProps {
   gemstones: Gemstone[];
   inquiries: BuyerInquiry[];
-  categories: Array<{ id: string; name: string; slug: string; description: string; stoneCount?: number }>;
-  onNavigateTab: (tab: 'inventory' | 'inquiries' | 'categories' | 'add') => void;
+  onNavigateTab: (tab: 'inventory' | 'inquiries' | 'add') => void;
 }
 
 export const DashboardStatsWidget: React.FC<DashboardStatsWidgetProps> = ({
   gemstones,
   inquiries,
-  categories,
   onNavigateTab,
 }) => {
-  const [activeView, setActiveView] = useState<'all' | 'categories' | 'inquiries'>('all');
-
   // 1. GEMSTONE METRICS
   const totalStones = gemstones.length;
   const availableStones = gemstones.filter((g) => g.status === 'AVAILABLE').length;
@@ -29,6 +23,8 @@ export const DashboardStatsWidget: React.FC<DashboardStatsWidgetProps> = ({
   const comingSoonStones = gemstones.filter((g) => g.status === 'COMING SOON').length;
   const totalCarats = gemstones.reduce((sum, g) => sum + (g.weightCarats || 0), 0);
   const totalValuation = gemstones.reduce((sum, g) => sum + (g.priceUsd || 0), 0);
+  const roughStones = gemstones.filter((g) => g.isRough).length;
+  const finishedStones = totalStones - roughStones;
 
   const availablePct = totalStones > 0 ? Math.round((availableStones / totalStones) * 100) : 0;
   const reservedPct = totalStones > 0 ? Math.round((reservedStones / totalStones) * 100) : 0;
@@ -43,194 +39,111 @@ export const DashboardStatsWidget: React.FC<DashboardStatsWidgetProps> = ({
   const closedInquiries = inquiries.filter((i) => i.status === 'Closed').length;
 
   const inquiryStatusData = [
-    { label: 'New', count: newInquiries, color: '#25D366', bgClass: 'bg-[#25D366]' },
-    { label: 'Replied', count: repliedInquiries, color: '#60a5fa', bgClass: 'bg-[#60a5fa]' },
-    { label: 'Negotiation', count: negotiationInquiries, color: '#F0D27A', bgClass: 'bg-[#F0D27A]' },
-    { label: 'Closed', count: closedInquiries, color: '#A7ADB5', bgClass: 'bg-[#A7ADB5]' },
+    { label: 'New', count: newInquiries, bgClass: 'bg-emerald-500' },
+    { label: 'Replied', count: repliedInquiries, bgClass: 'bg-blue-500' },
+    { label: 'Negotiation', count: negotiationInquiries, bgClass: 'bg-amber-500' },
+    { label: 'Closed', count: closedInquiries, bgClass: 'bg-slate-400' },
   ];
 
-  // 3. CATEGORY POPULARITY CALCULATION
-  // Calculate demand score by counting stones + mentions in inquiries
-  const categoryStats = categories.map((cat) => {
-    const stoneCount = gemstones.filter((g) => g.category === cat.slug).length;
-    const catCarats = gemstones
-      .filter((g) => g.category === cat.slug)
-      .reduce((sum, g) => sum + (g.weightCarats || 0), 0);
-    const catValuation = gemstones
-      .filter((g) => g.category === cat.slug)
-      .reduce((sum, g) => sum + (g.priceUsd || 0), 0);
-    
-    // Inquiries mentioning this category or stones in it
-    const inquiryMentions = inquiries.filter((i) => {
-      const q = (i.gemstoneWanted + ' ' + (i.stoneName || '') + ' ' + i.message).toLowerCase();
-      return q.includes(cat.slug) || q.includes(cat.name.toLowerCase()) || 
-             (cat.slug === 'paraiba' && q.includes('paraíba')) ||
-             (cat.slug === 'sapphire' && q.includes('sapphire'));
-    }).length;
-
-    // Popularity score = (stone count * 2) + (inquiry mentions * 4) + (catValuation / 10000)
-    const popularityScore = stoneCount * 2 + inquiryMentions * 4 + (catValuation > 0 ? 3 : 0);
-
-    return {
-      ...cat,
-      stoneCount,
-      catCarats,
-      catValuation,
-      inquiryMentions,
-      popularityScore,
-    };
-  });
-
-  // Sort by popularity score descending
-  const sortedCategories = [...categoryStats].sort((a, b) => b.popularityScore - a.popularityScore);
-  const mostPopularCategory = sortedCategories[0] || {
-    name: 'Ethiopian Paraíba Tourmaline',
-    slug: 'paraiba',
-    stoneCount: 4,
-    catCarats: 29.8,
-    inquiryMentions: 12,
-  };
-
-  // Color map for categories
-  const categoryColors: Record<string, { bar: string; text: string; bg: string }> = {
-    paraiba: { bar: 'bg-[#14f1ce]', text: 'text-[#14f1ce]', bg: 'bg-[#14f1ce]/10' },
-    sapphire: { bar: 'bg-[#60a5fa]', text: 'text-[#60a5fa]', bg: 'bg-[#60a5fa]/10' },
-    padparadscha: { bar: 'bg-[#fb923c]', text: 'text-[#fb923c]', bg: 'bg-[#fb923c]/10' },
-    rough: { bar: 'bg-[#D6A83F]', text: 'text-[#F0D27A]', bg: 'bg-[#D6A83F]/10' },
-    emerald: { bar: 'bg-[#34d399]', text: 'text-[#34d399]', bg: 'bg-[#34d399]/10' },
-    rare: { bar: 'bg-[#c084fc]', text: 'text-[#c084fc]', bg: 'bg-[#c084fc]/10' },
-  };
-
-  const defaultCatColor = { bar: 'bg-[#D6A83F]', text: 'text-[#F0D27A]', bg: 'bg-[#D6A83F]/10' };
-
   return (
-    <div className="rounded-2xl bg-[#071522] border border-[#D6A83F]/40 p-6 sm:p-8 shadow-[0_10px_40px_rgba(0,0,0,0.6)] space-y-8 relative overflow-hidden">
+    <div className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8 shadow-sm space-y-8">
       
-      {/* Subtle background ambient gold glow */}
-      <div className="absolute top-0 right-0 w-80 h-80 bg-[#D6A83F]/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-60 h-60 bg-[#14f1ce]/5 rounded-full blur-3xl pointer-events-none" />
-
       {/* Header Bar */}
-      <div className="flex items-center justify-between flex-wrap gap-4 border-b border-[#0B2745] pb-5 relative z-10">
+      <div className="flex items-center justify-between flex-wrap gap-4 border-b border-slate-200 pb-5">
         <div>
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#D6A83F] animate-pulse" />
-            <span className="text-[10px] uppercase font-mono tracking-widest text-[#D6A83F] font-bold">
+            <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+            <span className="text-[11px] uppercase font-mono tracking-widest text-amber-700 font-bold">
               EXECUTIVE INTELLIGENCE & ANALYTICS
             </span>
           </div>
-          <h2 className="font-heading text-xl sm:text-2xl font-bold text-[#F7F5EF] mt-1">
-            Dashboard Statistics & Demand Matrix
+          <h2 className="font-heading text-xl sm:text-2xl font-bold text-slate-900 mt-1">
+            Gemstone Inventory & Wholesale Intelligence
           </h2>
         </div>
 
-        {/* View Switcher Pills */}
-        <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[#05080D] border border-[#0B2745] text-xs font-mono">
-          <button
-            onClick={() => setActiveView('all')}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
-              activeView === 'all'
-                ? 'bg-[#D6A83F] text-[#05080D] font-bold shadow-md'
-                : 'text-[#A7ADB5] hover:text-[#F7F5EF]'
-            }`}
-          >
-            All Metrics
-          </button>
-          <button
-            onClick={() => setActiveView('categories')}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
-              activeView === 'categories'
-                ? 'bg-[#D6A83F] text-[#05080D] font-bold shadow-md'
-                : 'text-[#A7ADB5] hover:text-[#F7F5EF]'
-            }`}
-          >
-            Category Share
-          </button>
-          <button
-            onClick={() => setActiveView('inquiries')}
-            className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
-              activeView === 'inquiries'
-                ? 'bg-[#D6A83F] text-[#05080D] font-bold shadow-md'
-                : 'text-[#A7ADB5] hover:text-[#F7F5EF]'
-            }`}
-          >
-            Inquiries Trend
-          </button>
-        </div>
+        <button
+          onClick={() => onNavigateTab('add')}
+          className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs font-mono uppercase tracking-wider flex items-center gap-2 shadow-sm cursor-pointer transition-colors"
+        >
+          <PlusCircle className="w-4 h-4" />
+          <span>Add New Specimen</span>
+        </button>
       </div>
 
       {/* 3 CORE STATS PANELS GRID */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         {/* PANEL 1: TOTAL NUMBER OF GEMSTONES WITH DISTRIBUTION BAR CHART */}
-        <div className="lg:col-span-4 p-5 rounded-xl bg-[#05080D] border border-[#0B2745] flex flex-col justify-between space-y-5">
+        <div className="lg:col-span-4 p-5 rounded-xl bg-slate-50 border border-slate-200 flex flex-col justify-between space-y-5">
           <div>
-            <div className="flex items-center justify-between text-[#A7ADB5] text-xs font-mono">
+            <div className="flex items-center justify-between text-slate-500 text-xs font-mono">
               <span className="uppercase tracking-wider">Total Gemstones</span>
-              <Gem className="w-4 h-4 text-[#D6A83F]" />
+              <div className="p-1.5 rounded-lg bg-amber-100 text-amber-700">
+                <Gem className="w-4 h-4" />
+              </div>
             </div>
             
             <div className="mt-2 flex items-baseline gap-2">
-              <span className="text-3xl sm:text-4xl font-mono font-black text-[#F7F5EF]">
+              <span className="text-3xl sm:text-4xl font-mono font-black text-slate-900">
                 {totalStones}
               </span>
-              <span className="text-xs font-mono text-[#F0D27A] font-bold">
+              <span className="text-xs font-mono text-amber-700 font-bold">
                 Specimens ({totalCarats.toFixed(2)} ct)
               </span>
             </div>
 
-            <p className="text-[11px] text-[#A7ADB5] font-mono mt-1">
-              Valuation: <strong className="text-[#25D366]">${totalValuation.toLocaleString()} USD</strong>
+            <p className="text-[11px] text-slate-500 font-mono mt-1">
+              Catalog Valuation: <strong className="text-emerald-600 font-bold">${totalValuation.toLocaleString()} USD</strong>
             </p>
           </div>
 
-          {/* Simple Multi-Segment Proportion Bar Chart */}
+          {/* Simple Multi-Segment Proportion Bar */}
           <div className="space-y-2 font-mono text-[11px]">
-            <div className="flex justify-between text-[#A7ADB5] text-[10px]">
+            <div className="flex justify-between text-slate-500 text-[10px]">
               <span>AVAILABILITY BREAKDOWN</span>
-              <span>{availableStones} Active For Sale</span>
+              <span className="text-slate-700 font-semibold">{availableStones} Active For Sale</span>
             </div>
             
-            {/* Visual Bar */}
-            <div className="w-full h-3 bg-[#071522] rounded-full overflow-hidden flex border border-[#0B2745]">
+            <div className="w-full h-3 bg-slate-200 rounded-full overflow-hidden flex border border-slate-300">
               <div
                 style={{ width: `${availablePct}%` }}
-                className="h-full bg-[#25D366] transition-all duration-500"
+                className="h-full bg-emerald-500 transition-all duration-500"
                 title={`Available: ${availableStones} (${availablePct}%)`}
               />
               <div
                 style={{ width: `${reservedPct}%` }}
-                className="h-full bg-[#f59e0b] transition-all duration-500"
+                className="h-full bg-amber-500 transition-all duration-500"
                 title={`Reserved: ${reservedStones} (${reservedPct}%)`}
               />
               <div
                 style={{ width: `${soldPct}%` }}
-                className="h-full bg-[#ef4444] transition-all duration-500"
+                className="h-full bg-rose-500 transition-all duration-500"
                 title={`Sold: ${soldStones} (${soldPct}%)`}
               />
               <div
                 style={{ width: `${comingSoonPct}%` }}
-                className="h-full bg-[#60a5fa] transition-all duration-500"
+                className="h-full bg-blue-500 transition-all duration-500"
                 title={`Coming Soon: ${comingSoonStones} (${comingSoonPct}%)`}
               />
             </div>
 
             {/* Micro Legend Chips */}
             <div className="grid grid-cols-2 gap-2 pt-2 text-[10px]">
-              <div className="flex items-center gap-1.5 text-[#25D366]">
-                <span className="w-2 h-2 rounded-full bg-[#25D366]" />
+              <div className="flex items-center gap-1.5 text-emerald-700 font-medium">
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
                 <span>Available: {availableStones} ({availablePct}%)</span>
               </div>
-              <div className="flex items-center gap-1.5 text-[#f59e0b]">
-                <span className="w-2 h-2 rounded-full bg-[#f59e0b]" />
+              <div className="flex items-center gap-1.5 text-amber-700 font-medium">
+                <span className="w-2 h-2 rounded-full bg-amber-500" />
                 <span>Reserved: {reservedStones} ({reservedPct}%)</span>
               </div>
-              <div className="flex items-center gap-1.5 text-[#ef4444]">
-                <span className="w-2 h-2 rounded-full bg-[#ef4444]" />
+              <div className="flex items-center gap-1.5 text-rose-700 font-medium">
+                <span className="w-2 h-2 rounded-full bg-rose-500" />
                 <span>Sold: {soldStones} ({soldPct}%)</span>
               </div>
-              <div className="flex items-center gap-1.5 text-[#60a5fa]">
-                <span className="w-2 h-2 rounded-full bg-[#60a5fa]" />
+              <div className="flex items-center gap-1.5 text-blue-700 font-medium">
+                <span className="w-2 h-2 rounded-full bg-blue-500" />
                 <span>Coming: {comingSoonStones} ({comingSoonPct}%)</span>
               </div>
             </div>
@@ -238,7 +151,7 @@ export const DashboardStatsWidget: React.FC<DashboardStatsWidgetProps> = ({
 
           <button
             onClick={() => onNavigateTab('inventory')}
-            className="w-full py-2 rounded-lg bg-[#071522] hover:bg-[#0B2745] text-xs font-mono text-[#F0D27A] border border-[#0B2745] hover:border-[#D6A83F]/40 flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+            className="w-full py-2.5 rounded-lg bg-white hover:bg-slate-100 text-xs font-mono font-semibold text-slate-800 border border-slate-300 flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-sm"
           >
             <span>Open Inventory Catalog</span>
             <ChevronRight className="w-3.5 h-3.5" />
@@ -246,46 +159,48 @@ export const DashboardStatsWidget: React.FC<DashboardStatsWidgetProps> = ({
         </div>
 
         {/* PANEL 2: RECENT INQUIRIES COUNT & VERTICAL BAR CHART */}
-        <div className="lg:col-span-4 p-5 rounded-xl bg-[#05080D] border border-[#0B2745] flex flex-col justify-between space-y-5">
+        <div className="lg:col-span-4 p-5 rounded-xl bg-slate-50 border border-slate-200 flex flex-col justify-between space-y-5">
           <div>
-            <div className="flex items-center justify-between text-[#A7ADB5] text-xs font-mono">
-              <span className="uppercase tracking-wider">Recent Inquiries</span>
-              <MessageSquare className="w-4 h-4 text-[#60a5fa]" />
+            <div className="flex items-center justify-between text-slate-500 text-xs font-mono">
+              <span className="uppercase tracking-wider">Buyer Inquiries</span>
+              <div className="p-1.5 rounded-lg bg-blue-100 text-blue-700">
+                <MessageSquare className="w-4 h-4" />
+              </div>
             </div>
             
             <div className="mt-2 flex items-baseline gap-2">
-              <span className="text-3xl sm:text-4xl font-mono font-black text-[#60a5fa]">
+              <span className="text-3xl sm:text-4xl font-mono font-black text-blue-700">
                 {newInquiries}
               </span>
-              <span className="text-xs font-mono text-[#F7F5EF]">
+              <span className="text-xs font-mono text-slate-700 font-medium">
                 New Actionable ({totalInquiries} Total)
               </span>
             </div>
 
-            <p className="text-[11px] text-[#A7ADB5] font-mono mt-1">
-              Response Rate: <strong className="text-[#25D366]">100% Sourced Direct</strong>
+            <p className="text-[11px] text-slate-500 font-mono mt-1">
+              Direct Wholesale Pipeline: <strong className="text-emerald-600 font-semibold">Active</strong>
             </p>
           </div>
 
           {/* Simple Column Bar Chart for Inquiries by Status */}
           <div className="space-y-2 font-mono">
-            <div className="flex justify-between text-[#A7ADB5] text-[10px]">
+            <div className="flex justify-between text-slate-500 text-[10px]">
               <span>INQUIRY STATUS PIPELINE</span>
-              <span>Conversion Stage</span>
+              <span className="text-slate-700 font-semibold">Conversion Stage</span>
             </div>
 
-            <div className="grid grid-cols-4 gap-2 items-end h-20 pt-2 border-b border-[#0B2745] pb-1">
+            <div className="grid grid-cols-4 gap-2 items-end h-20 pt-2 border-b border-slate-300 pb-1">
               {inquiryStatusData.map((item, idx) => {
                 const maxVal = Math.max(...inquiryStatusData.map((d) => d.count), 1);
                 const heightPct = Math.max(Math.round((item.count / maxVal) * 100), 15);
                 return (
                   <div key={idx} className="flex flex-col items-center gap-1 h-full justify-end group">
-                    <span className="text-[10px] font-bold text-[#F7F5EF] group-hover:scale-110 transition-transform">
+                    <span className="text-[10px] font-bold text-slate-700 group-hover:scale-110 transition-transform">
                       {item.count}
                     </span>
                     <div
                       style={{ height: `${heightPct}%` }}
-                      className={`w-full rounded-t-sm ${item.bgClass} opacity-80 group-hover:opacity-100 transition-all`}
+                      className={`w-full rounded-t-sm ${item.bgClass} opacity-85 group-hover:opacity-100 transition-all`}
                     />
                   </div>
                 );
@@ -293,7 +208,7 @@ export const DashboardStatsWidget: React.FC<DashboardStatsWidgetProps> = ({
             </div>
 
             {/* Labels under bars */}
-            <div className="grid grid-cols-4 gap-1 text-[9px] text-[#A7ADB5] text-center font-mono">
+            <div className="grid grid-cols-4 gap-1 text-[9px] text-slate-500 text-center font-mono">
               <span>New</span>
               <span>Replied</span>
               <span>Negot.</span>
@@ -303,130 +218,67 @@ export const DashboardStatsWidget: React.FC<DashboardStatsWidgetProps> = ({
 
           <button
             onClick={() => onNavigateTab('inquiries')}
-            className="w-full py-2 rounded-lg bg-[#071522] hover:bg-[#0B2745] text-xs font-mono text-[#60a5fa] border border-[#0B2745] hover:border-[#60a5fa]/40 flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+            className="w-full py-2.5 rounded-lg bg-white hover:bg-slate-100 text-xs font-mono font-semibold text-slate-800 border border-slate-300 flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-sm"
           >
             <span>Review Inquiries Desk</span>
             <ChevronRight className="w-3.5 h-3.5" />
           </button>
         </div>
 
-        {/* PANEL 3: 'MOST POPULAR' GEMSTONE CATEGORY WITH TROPHY BADGE & DEMAND SCORE */}
-        <div className="lg:col-span-4 p-5 rounded-xl bg-[#05080D] border border-[#D6A83F]/60 flex flex-col justify-between space-y-4 relative overflow-hidden shadow-lg">
+        {/* PANEL 3: SOURCING & MATERIAL FORM BREAKDOWN */}
+        <div className="lg:col-span-4 p-5 rounded-xl bg-amber-50/50 border border-amber-300 flex flex-col justify-between space-y-4 shadow-sm">
           
-          {/* Top highlight banner */}
           <div className="flex items-center justify-between">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#D6A83F]/15 border border-[#D6A83F]/40 text-[#F0D27A] text-[10px] font-mono font-bold uppercase tracking-wider">
-              <Flame className="w-3 h-3 text-[#D6A83F]" />
-              <span>MOST POPULAR CATEGORY</span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 border border-amber-300 text-amber-800 text-[10px] font-mono font-bold uppercase tracking-wider">
+              <Sparkles className="w-3 h-3 text-amber-600" />
+              <span>DIRECT SOURCING SPECIMENS</span>
             </span>
-            <Award className="w-5 h-5 text-[#D6A83F]" />
+            <ShieldCheck className="w-5 h-5 text-amber-600" />
           </div>
 
-          {/* Winner Category Profile */}
-          <div className="p-3.5 rounded-lg bg-gradient-to-br from-[#0B2745] to-[#071522] border border-[#14f1ce]/40 space-y-2">
+          <div className="p-3.5 rounded-lg bg-white border border-amber-200 shadow-sm space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-mono text-[#14f1ce] font-bold uppercase tracking-widest">
-                #1 Top Wholesale Demand
+              <span className="text-[10px] font-mono text-teal-700 font-bold uppercase tracking-widest">
+                African Origin Guarantee
               </span>
-              <span className="px-2 py-0.5 rounded bg-[#14f1ce]/20 text-[#14f1ce] text-[10px] font-mono font-bold">
-                {mostPopularCategory.stoneCount} Stones
+              <span className="px-2 py-0.5 rounded bg-teal-50 border border-teal-200 text-teal-700 text-[10px] font-mono font-bold">
+                100% Direct
               </span>
             </div>
 
-            <h3 className="font-heading text-lg font-bold text-[#F7F5EF] leading-tight">
-              {mostPopularCategory.name}
+            <h3 className="font-heading text-lg font-bold text-slate-900 leading-tight">
+              Single-Source Sourced Vault
             </h3>
 
-            <div className="flex items-center justify-between text-[11px] font-mono text-[#A7ADB5] pt-1 border-t border-[#0B2745]">
-              <span>Total Weight: <strong className="text-[#F0D27A]">{mostPopularCategory.catCarats?.toFixed(2) || '29.8'} ct</strong></span>
-              <span>Buyer Inquiries: <strong className="text-[#60a5fa]">{mostPopularCategory.inquiryMentions || 12}</strong></span>
+            <div className="flex items-center justify-between text-[11px] font-mono text-slate-500 pt-1 border-t border-slate-100">
+              <span>Faceted Finished: <strong className="text-slate-800">{finishedStones} Stones</strong></span>
+              <span>Rough Crystals: <strong className="text-blue-700">{roughStones} Stones</strong></span>
             </div>
           </div>
 
-          {/* Quick metric breakdown */}
           <div className="space-y-1.5 text-xs font-mono">
-            <div className="flex justify-between text-[#A7ADB5] text-[10px]">
-              <span>DEMAND INDEX</span>
-              <span className="text-[#25D366] font-bold">Very High (98/100)</span>
+            <div className="flex justify-between text-slate-500 text-[10px]">
+              <span>MINED & VAULTED</span>
+              <span className="text-emerald-700 font-bold">{totalCarats.toFixed(1)} Total Carats</span>
             </div>
-            <div className="w-full h-2 bg-[#071522] rounded-full overflow-hidden border border-[#0B2745]">
-              <div className="h-full bg-gradient-to-r from-[#14f1ce] to-[#25D366] w-[98%]" />
+            <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden border border-slate-300">
+              <div className="h-full bg-gradient-to-r from-teal-500 to-amber-500 w-full" />
             </div>
-            <span className="text-[10px] text-[#A7ADB5] block pt-0.5">
-              Direct African mine access driving maximum international collector interest.
+            <span className="text-[10px] text-slate-500 block pt-0.5">
+              Ethiopian Shakiso and East African primary deposits with direct custody.
             </span>
           </div>
 
           <button
-            onClick={() => onNavigateTab('categories')}
-            className="w-full py-2 rounded-lg bg-[#D6A83F] hover:bg-[#F0D27A] text-xs font-mono font-bold text-[#05080D] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+            onClick={() => onNavigateTab('inventory')}
+            className="w-full py-2.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-xs font-mono font-bold text-slate-950 flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-sm"
           >
-            <span>Manage All Categories</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <span>View All Specimens</span>
+            <ChevronRight className="w-3.5 h-3.5" />
           </button>
 
         </div>
 
-      </div>
-
-      {/* HORIZONTAL CATEGORY DISTRIBUTION CHART (Simple Bar Chart Visualization) */}
-      <div className="p-6 rounded-xl bg-[#05080D] border border-[#0B2745] space-y-5">
-        <div className="flex items-center justify-between flex-wrap gap-2">
-          <div className="flex items-center gap-2">
-            <BarChart2 className="w-4 h-4 text-[#D6A83F]" />
-            <h3 className="font-heading text-sm font-bold text-[#F7F5EF] uppercase tracking-wider">
-              Category Distribution & Volume Share
-            </h3>
-          </div>
-          <span className="text-xs font-mono text-[#A7ADB5]">
-            Comparison across all {categories.length} active specialties
-          </span>
-        </div>
-
-        {/* Progress Bar Visualization for Each Category */}
-        <div className="space-y-3 font-mono text-xs">
-          {sortedCategories.map((cat, index) => {
-            const count = cat.stoneCount || 0;
-            const pct = totalStones > 0 ? Math.round((count / totalStones) * 100) : 0;
-            const style = categoryColors[cat.slug] || defaultCatColor;
-            const isTop = index === 0;
-
-            return (
-              <div key={cat.id} className="space-y-1 group">
-                <div className="flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-2">
-                    <span className={`w-5 h-5 rounded flex items-center justify-center text-[10px] font-bold ${
-                      isTop ? 'bg-[#D6A83F] text-[#05080D]' : 'bg-[#071522] text-[#A7ADB5] border border-[#0B2745]'
-                    }`}>
-                      #{index + 1}
-                    </span>
-                    <strong className={`font-medium ${isTop ? 'text-[#F0D27A]' : 'text-[#F7F5EF]'}`}>
-                      {cat.name}
-                    </strong>
-                    {isTop && (
-                      <span className="px-1.5 py-0.2 rounded bg-[#D6A83F]/20 text-[#F0D27A] text-[9px] font-bold">
-                        LEADER
-                      </span>
-                    )}
-                  </div>
-                  
-                  <div className="flex items-center gap-3 text-xs">
-                    <span className="text-[#A7ADB5]">{cat.catCarats?.toFixed(1) || 0} ct</span>
-                    <strong className={style.text}>{count} stones ({pct}%)</strong>
-                  </div>
-                </div>
-
-                {/* Horizontal Progress Bar */}
-                <div className="w-full h-2.5 bg-[#071522] rounded-full overflow-hidden border border-[#0B2745]/60 flex">
-                  <div
-                    style={{ width: `${Math.max(pct, 4)}%` }}
-                    className={`h-full ${style.bar} transition-all duration-700 ease-out group-hover:brightness-125`}
-                  />
-                </div>
-              </div>
-            );
-          })}
-        </div>
       </div>
 
     </div>

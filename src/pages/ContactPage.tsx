@@ -72,11 +72,11 @@ export const ContactPage: React.FC<ContactPageProps> = ({
           </h1>
 
           <p className="font-serif-lux text-base sm:text-xl text-[#F0D27A] italic max-w-2xl mx-auto">
-            Direct access to African and Sri Lankan colored gemstones.
+            Direct access to African and fine natural colored gemstones.
           </p>
 
           <p className="text-xs sm:text-base text-[#A7ADB5] max-w-3xl mx-auto font-light leading-relaxed">
-            Tell us what gemstone you are looking for. Whether you are searching for Paraíba Tourmaline, sapphire, Padparadscha, rough material or a specific collector stone, contact us with your requirements.
+            Tell us what gemstone you are looking for. Whether you are searching for Paraíba Tourmaline, natural sapphires, rough material or a specific collector stone, contact us with your requirements.
           </p>
         </div>
       </div>
@@ -131,7 +131,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                 <div className="p-3.5 sm:p-4 rounded-xl bg-[#05080D] border border-[#0B2745] space-y-1">
                   <span className="text-[9px] sm:text-[10px] uppercase text-[#A7ADB5] block">Field Operations</span>
                   <p className="text-[11px] sm:text-xs text-[#F7F5EF] leading-relaxed">
-                    East Africa (Ethiopia / Kenya / Tanzania) & Colombo, Sri Lanka
+                    East Africa (Ethiopia / Kenya / Tanzania) & International Desks
                   </p>
                 </div>
 

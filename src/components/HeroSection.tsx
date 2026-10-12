@@ -1,62 +1,111 @@
-import React, { useState } from 'react';
-import { Sparkles, ArrowRight, ShieldCheck, Eye, Phone, ChevronRight, Play } from 'lucide-react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import {
+  Sparkles,
+  ArrowRight,
+  ShieldCheck,
+  Eye,
+  ChevronRight,
+  ChevronLeft,
+  RotateCw,
+  Image as ImageIcon
+} from 'lucide-react';
 import { Gemstone } from '../types/gemstone';
+import { INITIAL_GEMSTONES } from '../data/gemstoneInventory';
 
 interface HeroSectionProps {
+  gemstones?: Gemstone[];
   onExploreParaiba: () => void;
   onContactUs: () => void;
   onSelectStone: (stone: Gemstone) => void;
-  featuredStone: Gemstone;
+  featuredStone?: Gemstone;
+}
+
+interface HeroSlide {
+  id: string;
+  image: string;
+  imageIndex: number;
+  totalImagesForStone: number;
+  stone: Gemstone;
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
+  gemstones = [],
   onExploreParaiba,
   onContactUs,
   onSelectStone,
   featuredStone,
 }) => {
-  const [activeTab, setActiveTab] = useState<'paraiba' | 'sapphire' | 'padparadscha'>('paraiba');
+  // Aggregate all gemstone images from the entire inventory for the hero loop
+  const slides = useMemo<HeroSlide[]>(() => {
+    const sourceList = gemstones.length > 0 ? gemstones : INITIAL_GEMSTONES;
+    const items: HeroSlide[] = [];
 
-  const heroShowcases = {
-    paraiba: {
-      title: 'Ethiopian Paraíba Tourmaline',
-      carat: '5.20 ct',
-      color: 'Electric Neon Blue-Green',
-      origin: 'Ethiopia (Direct Source)',
-      treatment: 'Natural / Disclosed (Unheated)',
-      image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=1200&auto=format&fit=crop',
-      accentGlow: 'from-[#14f1ce]/20 via-[#0B2745]/40 to-transparent',
-      borderColor: 'border-[#14f1ce]/40',
-      badgeText: 'MUSEUM SPECIMEN',
-      badgeColor: 'bg-[#14f1ce]/10 text-[#14f1ce] border-[#14f1ce]/30',
-    },
-    sapphire: {
-      title: 'Ceylon Royal Blue Sapphire',
-      carat: '7.15 ct',
-      color: 'Velvety Royal Blue',
-      origin: 'Sri Lanka (Ratnapura)',
-      treatment: 'Unheated (Certified Gübelin)',
-      image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=1200&auto=format&fit=crop',
-      accentGlow: 'from-[#1755af]/30 via-[#0B2745]/40 to-transparent',
-      borderColor: 'border-[#1755af]/50',
-      badgeText: 'CERTIFIED ROYAL BLUE',
-      badgeColor: 'bg-[#1755af]/20 text-[#60a5fa] border-[#1755af]/40',
-    },
-    padparadscha: {
-      title: 'Ceylon Padparadscha Sapphire',
-      carat: '3.42 ct',
-      color: 'Sunset Lotus (Pink-Orange)',
-      origin: 'Sri Lanka (Ceylon)',
-      treatment: 'Natural Unheated (SSEF)',
-      image: 'https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?q=80&w=1200&auto=format&fit=crop',
-      accentGlow: 'from-[#f97316]/20 via-[#0B2745]/40 to-transparent',
-      borderColor: 'border-[#f97316]/40',
-      badgeText: 'RARE COLLECTOR',
-      badgeColor: 'bg-[#f97316]/10 text-[#fb923c] border-[#f97316]/30',
-    },
+    sourceList.forEach((stone) => {
+      const stoneImages = (stone.images && stone.images.length > 0)
+        ? stone.images
+        : ['https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=1200&auto=format&fit=crop'];
+
+      stoneImages.forEach((imgUrl, imgIdx) => {
+        items.push({
+          id: `${stone.id}-img-${imgIdx}`,
+          image: imgUrl,
+          imageIndex: imgIdx,
+          totalImagesForStone: stoneImages.length,
+          stone,
+        });
+      });
+    });
+
+    return items;
+  }, [gemstones]);
+
+  // Current active slide index in the loop
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // Safe bounds guard if gemstones array changes
+  const activeIndex = slides.length > 0 ? Math.min(currentIndex, slides.length - 1) : 0;
+  const currentSlide = slides[activeIndex] || slides[0];
+
+  // Loop navigation handlers
+  const handleNext = useCallback(() => {
+    if (slides.length <= 1) return;
+    setCurrentIndex((prev) => (prev + 1) % slides.length);
+  }, [slides.length]);
+
+  const handlePrev = useCallback(() => {
+    if (slides.length <= 1) return;
+    setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
+  }, [slides.length]);
+
+  // Jump directly to the first image of a specific gemstone
+  const jumpToStone = (stoneId: string) => {
+    const targetIdx = slides.findIndex((s) => s.stone.id === stoneId);
+    if (targetIdx !== -1) {
+      setCurrentIndex(targetIdx);
+    }
   };
 
-  const currentShowcase = heroShowcases[activeTab];
+  // Keyboard navigation support (Left / Right arrow keys)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) return;
+      if (e.key === 'ArrowLeft') {
+        handlePrev();
+      } else if (e.key === 'ArrowRight') {
+        handleNext();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleNext, handlePrev]);
+
+  // Top distinct specimens for quick switcher
+  const distinctStones = useMemo(() => {
+    const sourceList = gemstones.length > 0 ? gemstones : INITIAL_GEMSTONES;
+    return sourceList.slice(0, 5);
+  }, [gemstones]);
+
+  const activeStoneId = currentSlide?.stone?.id;
 
   return (
     <section className="relative min-h-[90vh] sm:min-h-screen pt-24 sm:pt-28 pb-12 sm:pb-16 flex items-center justify-center overflow-hidden bg-[#05080D]">
@@ -73,14 +122,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           
           {/* Left Column: Brand Headline, Philosophy & Core CTAs */}
           <div className="lg:col-span-7 space-y-4 sm:space-y-6 text-left">
-            
-            {/* Direct Source Subheading Badge */}
-            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 rounded-full border border-[#D6A83F]/30 bg-[#071522]/80 backdrop-blur-md">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#D6A83F] animate-pulse" />
-              <span className="text-[9px] sm:text-xs font-mono tracking-widest text-[#F0D27A] uppercase">
-                DIRECT FROM AFRICAN SOURCES · WHOLESALE
-              </span>
-            </div>
 
             {/* Main Luxury Headline */}
             <h1 className="font-heading text-2xl sm:text-5xl lg:text-6xl font-light text-[#F7F5EF] leading-[1.15] sm:leading-[1.12] tracking-tight">
@@ -91,54 +132,43 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
             {/* Supporting Text (concise, high-impact) */}
             <p className="text-xs sm:text-base text-[#A7ADB5] max-w-xl font-light leading-relaxed">
-              Ethiopian Paraíba Tourmaline and fine colored gemstones from Africa and Sri Lanka. Sourced directly at mine level for international collectors and luxury jewelers.
+              Exceptional untreated and natural gemstones. Sourced directly at mine level in Africa for international collectors, dealers, and luxury jewelers.
             </p>
 
             {/* Quick Segmented Switcher for Hero Gemstone Preview */}
             <div className="pt-0.5 sm:pt-1">
               <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-                <span className="text-[9px] sm:text-[10px] text-[#A7ADB5]/70 uppercase tracking-wider font-mono shrink-0 mr-1 hidden xs:inline">Preview:</span>
-                <button
-                  onClick={() => setActiveTab('paraiba')}
-                  className={`text-[11px] sm:text-xs px-2.5 sm:px-3 py-1.5 rounded-lg border transition-all cursor-pointer whitespace-nowrap min-h-[38px] ${
-                    activeTab === 'paraiba'
-                      ? 'border-[#14f1ce] bg-[#14f1ce]/15 text-[#14f1ce] font-medium shadow-[0_0_15px_rgba(20,241,206,0.25)]'
-                      : 'border-[#0B2745] text-[#A7ADB5] hover:border-[#D6A83F]/40'
-                  }`}
-                >
-                  Ethiopian Paraíba
-                </button>
-                <button
-                  onClick={() => setActiveTab('sapphire')}
-                  className={`text-[11px] sm:text-xs px-2.5 sm:px-3 py-1.5 rounded-lg border transition-all cursor-pointer whitespace-nowrap min-h-[38px] ${
-                    activeTab === 'sapphire'
-                      ? 'border-[#60a5fa] bg-[#1755af]/25 text-[#93c5fd] font-medium shadow-[0_0_15px_rgba(23,85,175,0.3)]'
-                      : 'border-[#0B2745] text-[#A7ADB5] hover:border-[#D6A83F]/40'
-                  }`}
-                >
-                  Royal Blue Ceylon
-                </button>
-                <button
-                  onClick={() => setActiveTab('padparadscha')}
-                  className={`text-[11px] sm:text-xs px-2.5 sm:px-3 py-1.5 rounded-lg border transition-all cursor-pointer whitespace-nowrap min-h-[38px] ${
-                    activeTab === 'padparadscha'
-                      ? 'border-[#f97316] bg-[#f97316]/20 text-[#fdba74] font-medium shadow-[0_0_15px_rgba(249,115,22,0.25)]'
-                      : 'border-[#0B2745] text-[#A7ADB5] hover:border-[#D6A83F]/40'
-                  }`}
-                >
-                  Ceylon Padparadscha
-                </button>
+                <span className="text-[9px] sm:text-[10px] text-[#A7ADB5]/70 uppercase tracking-wider font-mono shrink-0 mr-1 hidden xs:inline">
+                  Featured:
+                </span>
+                {distinctStones.map((stone) => {
+                  const isSelected = activeStoneId === stone.id;
+                  const label = `${stone.weightCarats} ct ${stone.name.split(' ').slice(1, 4).join(' ')}`;
+                  return (
+                    <button
+                      key={stone.id}
+                      onClick={() => jumpToStone(stone.id)}
+                      className={`text-[11px] sm:text-xs px-2.5 sm:px-3 py-1.5 rounded-lg border transition-all cursor-pointer whitespace-nowrap min-h-[38px] ${
+                        isSelected
+                          ? 'border-[#D6A83F] bg-[#D6A83F]/20 text-[#F0D27A] font-semibold shadow-[0_0_15px_rgba(214,168,63,0.3)]'
+                          : 'border-[#0B2745] text-[#A7ADB5] hover:border-[#D6A83F]/40 hover:text-[#F7F5EF]'
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
-            {/* Action Buttons: EXPLORE PARAÍBA | CONTACT US */}
+            {/* Action Buttons: EXPLORE GEMSTONES | CONTACT US */}
             <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
               <button
                 onClick={onExploreParaiba}
                 className="group relative inline-flex items-center justify-center px-6 sm:px-8 py-3.5 sm:py-4 rounded-lg font-heading text-xs uppercase tracking-[0.18em] font-bold text-[#05080D] bg-gradient-to-r from-[#D6A83F] via-[#F0D27A] to-[#D6A83F] hover:shadow-[0_0_30px_rgba(214,168,63,0.5)] transition-all duration-300 cursor-pointer overflow-hidden min-h-[46px] sm:min-h-[48px] active:scale-[0.99]"
               >
                 <span className="relative z-10 flex items-center gap-2">
-                  EXPLORE PARAÍBA
+                  EXPLORE GEMSTONES
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </span>
                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
@@ -170,72 +200,65 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
           </div>
 
-          {/* Right Column: Hero High-Value Gemstone Interactive Showcase */}
+          {/* Right Column: Hero Gemstone Interactive Image Loop Showcase */}
           <div className="lg:col-span-5 flex justify-center">
             <div className="relative w-full max-w-md">
               
               {/* Luxury Frame with glowing border */}
-              <div className="relative p-1 rounded-2xl bg-gradient-to-b from-[#D6A83F]/30 via-[#0B2745] to-[#071522] shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
+              <div className="relative p-1 rounded-2xl bg-gradient-to-b from-[#D6A83F]/40 via-[#0B2745] to-[#071522] shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
                 <div className="relative rounded-xl overflow-hidden bg-[#071522] border border-[#0B2745]">
                   
-                  {/* Gemstone Image with dramatic lighting */}
-                  <div className="relative aspect-square w-full bg-[#05080D] overflow-hidden group">
+                  {/* Gemstone Image Container with Previous & Next Loop Buttons (Pure image, no descriptions) */}
+                  <div
+                    onClick={() => currentSlide?.stone && onSelectStone(currentSlide.stone)}
+                    className="relative aspect-square w-full bg-[#05080D] overflow-hidden select-none cursor-pointer group"
+                    title={currentSlide?.stone?.name ? `Click to inspect ${currentSlide.stone.name}` : undefined}
+                  >
                     <img
-                      src={currentShowcase.image}
-                      alt={currentShowcase.title}
-                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                      key={currentSlide?.image}
+                      src={currentSlide?.image}
+                      alt={currentSlide?.stone?.name || 'Featured Gemstone'}
+                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-all duration-700 ease-out"
                     />
 
-                    {/* Gradient Overlay for high-end feel */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#071522] via-transparent to-transparent opacity-90" />
+                    {/* PREVIOUS BUTTON (Loop backward through all added gemstone images) */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handlePrev();
+                      }}
+                      aria-label="Previous gemstone image"
+                      title="Previous Gemstone Image"
+                      className="absolute left-2.5 sm:left-3.5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#05080D]/80 hover:bg-[#D6A83F] text-[#F7F5EF] hover:text-[#05080D] border border-[#D6A83F]/60 shadow-[0_4px_24px_rgba(0,0,0,0.85)] flex items-center justify-center transition-all duration-200 cursor-pointer backdrop-blur-md active:scale-90 group/btn"
+                    >
+                      <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 group-hover/btn:-translate-x-0.5 transition-transform" />
+                    </button>
+
+                    {/* NEXT BUTTON (Loop forward through all added gemstone images) */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleNext();
+                      }}
+                      aria-label="Next gemstone image"
+                      title="Next Gemstone Image"
+                      className="absolute right-2.5 sm:right-3.5 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#05080D]/80 hover:bg-[#D6A83F] text-[#F7F5EF] hover:text-[#05080D] border border-[#D6A83F]/60 shadow-[0_4px_24px_rgba(0,0,0,0.85)] flex items-center justify-center transition-all duration-200 cursor-pointer backdrop-blur-md active:scale-90 group/btn"
+                    >
+                      <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover/btn:translate-x-0.5 transition-transform" />
+                    </button>
                     
-                    {/* Top Spec Badges */}
-                    <div className="absolute top-3 sm:top-4 left-3 sm:left-4 right-3 sm:right-4 flex items-center justify-between pointer-events-none">
-                      <span className={`px-2 sm:px-2.5 py-0.5 sm:py-1 rounded text-[9px] sm:text-[10px] font-mono tracking-wider border font-bold ${currentShowcase.badgeColor}`}>
-                        {currentShowcase.badgeText}
+                    {/* Minimal Top Badges & Loop Counter */}
+                    <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none z-10">
+                      <span className="px-2 py-0.5 rounded text-[9px] sm:text-[10px] font-mono tracking-wider border font-bold bg-[#05080D]/85 text-[#F0D27A] border-[#D6A83F]/40 backdrop-blur-md">
+                        NATURAL SPECIMEN
                       </span>
-                      <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded text-[10px] sm:text-[11px] font-mono font-bold bg-[#05080D]/80 text-[#F0D27A] border border-[#D6A83F]/40 backdrop-blur-md">
-                        {currentShowcase.carat}
+
+                      <span className="px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-mono font-bold bg-[#05080D]/85 text-[#F0D27A] border border-[#D6A83F]/40 backdrop-blur-md shadow flex items-center gap-1">
+                        <ImageIcon className="w-3 h-3 text-[#D6A83F]" />
+                        <span>{activeIndex + 1} / {slides.length}</span>
                       </span>
-                    </div>
-
-                    {/* Stone Info Card overlay on bottom */}
-                    <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4 right-2 sm:right-4 p-2.5 sm:p-4 rounded-xl bg-[#05080D]/95 border border-[#D6A83F]/30 backdrop-blur-md">
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="min-w-0">
-                          <h3 className="font-heading text-xs sm:text-base font-semibold text-[#F7F5EF] truncate">
-                            {currentShowcase.title}
-                          </h3>
-                          <p className="text-[10px] sm:text-xs text-[#F0D27A] font-mono mt-0.5 truncate">
-                            {currentShowcase.color}
-                          </p>
-                        </div>
-                        <span className="text-[9px] sm:text-[10px] font-mono text-[#25D366] bg-[#25D366]/10 px-2 py-0.5 rounded border border-[#25D366]/30 font-bold shrink-0">
-                          AVAILABLE
-                        </span>
-                      </div>
-
-                      <div className="mt-1.5 sm:mt-2 pt-1.5 sm:pt-2 border-t border-[#0B2745] flex items-center justify-between text-[9px] sm:text-[11px] text-[#A7ADB5]">
-                        <span className="truncate">Origin: <strong className="text-[#F7F5EF]">{currentShowcase.origin}</strong></span>
-                        <span className="shrink-0">{currentShowcase.treatment}</span>
-                      </div>
-
-                      <div className="mt-2 sm:mt-2.5 grid grid-cols-2 gap-2">
-                        <button
-                          onClick={() => onSelectStone(featuredStone)}
-                          className="py-2 px-2 rounded-lg bg-[#0B2745] hover:bg-[#D6A83F]/20 text-[11px] sm:text-xs text-[#F7F5EF] hover:text-[#F0D27A] border border-[#D6A83F]/30 flex items-center justify-center gap-1 transition-colors cursor-pointer min-h-[40px] active:scale-95"
-                        >
-                          <Eye className="w-3.5 h-3.5" />
-                          <span>Inspect</span>
-                        </button>
-                        <button
-                          onClick={onContactUs}
-                          className="py-2 px-2 rounded-lg bg-gradient-to-r from-[#D6A83F] to-[#F0D27A] text-[11px] sm:text-xs font-semibold text-[#05080D] hover:opacity-90 flex items-center justify-center gap-1 transition-opacity cursor-pointer min-h-[40px] active:scale-95"
-                        >
-                          <span>Inquire</span>
-                          <ChevronRight className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
                     </div>
                   </div>
 
@@ -243,7 +266,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </div>
 
               {/* Decorative luxury seal */}
-              <div className="absolute -bottom-4 -right-4 w-16 h-16 rounded-full bg-gradient-to-br from-[#D6A83F] to-[#A87E23] p-[2px] shadow-xl hidden sm:flex items-center justify-center">
+              <div className="absolute -bottom-4 -right-4 w-16 h-16 rounded-full bg-gradient-to-br from-[#D6A83F] to-[#A87E23] p-[2px] shadow-xl hidden sm:flex items-center justify-center pointer-events-none">
                 <div className="w-full h-full rounded-full bg-[#071522] flex flex-col items-center justify-center text-center p-1">
                   <span className="text-[8px] uppercase tracking-tighter text-[#D6A83F] font-bold font-mono leading-none">
                     100%

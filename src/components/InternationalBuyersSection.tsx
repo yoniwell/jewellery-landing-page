@@ -15,7 +15,7 @@ export const InternationalBuyersSection: React.FC<InternationalBuyersProps> = ({
     { name: 'United States', hubs: 'New York, Los Angeles, Miami' },
     { name: 'Middle East', hubs: 'Dubai (DMCC), Abu Dhabi, Riyadh, Doha' },
     { name: 'Asia', hubs: 'Hong Kong, Tokyo, Bangkok, Singapore' },
-    { name: 'Africa', hubs: 'Addis Ababa, Nairobi, Colombo (Sri Lanka direct)' },
+    { name: 'Africa', hubs: 'Addis Ababa, Nairobi, Arusha, direct mine desks' },
   ];
 
   const commitments = [

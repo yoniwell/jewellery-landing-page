@@ -7,7 +7,6 @@ interface ParaibaPageProps {
   onSelectStone: (stone: Gemstone) => void;
   onOpenInquiry: (stoneName?: string) => void;
   onOpenWhatsAppWithStone: (stoneName: string) => void;
-  onViewCertificate: (stone: Gemstone) => void;
 }
 
 export const ParaibaPage: React.FC<ParaibaPageProps> = ({
@@ -15,7 +14,6 @@ export const ParaibaPage: React.FC<ParaibaPageProps> = ({
   onSelectStone,
   onOpenInquiry,
   onOpenWhatsAppWithStone,
-  onViewCertificate,
 }) => {
   const [selectedShape, setSelectedShape] = useState<string>('ALL');
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
@@ -181,17 +179,6 @@ export const ParaibaPage: React.FC<ParaibaPageProps> = ({
                     <span className="text-[#F7F5EF] truncate block">{stone.dimensions}</span>
                   </div>
                 </div>
-
-                {/* Certificate notification */}
-                {stone.certificate && (
-                  <button
-                    onClick={() => onViewCertificate(stone)}
-                    className="text-[11px] font-mono text-[#D6A83F] hover:text-[#F0D27A] flex items-center gap-1.5 transition-colors cursor-pointer"
-                  >
-                    <Shield className="w-3.5 h-3.5" />
-                    <span className="truncate">Report: {stone.certificate.laboratory} #{stone.certificate.reportNumber}</span>
-                  </button>
-                )}
 
                 {/* Price & Action Buttons */}
                 <div className="pt-3 border-t border-[#0B2745] flex items-center justify-between gap-2">

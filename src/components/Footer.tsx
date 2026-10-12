@@ -80,12 +80,20 @@ export const Footer: React.FC<FooterProps> = ({
           {/* Col 2: Navigation Links */}
           <div className="lg:col-span-3 space-y-3">
             <h4 className="font-heading text-xs font-bold uppercase tracking-widest text-[#F7F5EF]">
-              Collections & Portfolios
+              Gemstone Portfolio
             </h4>
             <ul className="space-y-2 text-xs font-mono">
               <li>
                 <button
-                  onClick={() => { setCurrentPage('paraiba'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  onClick={() => { setCurrentPage('gemstones'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  className="hover:text-[#F0D27A] transition-colors"
+                >
+                  All Certified Gemstones
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => { setCurrentPage('gemstones'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                   className="hover:text-[#F0D27A] transition-colors"
                 >
                   Ethiopian Paraíba Tourmaline
@@ -93,23 +101,15 @@ export const Footer: React.FC<FooterProps> = ({
               </li>
               <li>
                 <button
-                  onClick={() => { setCurrentPage('sapphires'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  onClick={() => { setCurrentPage('gemstones'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                   className="hover:text-[#F0D27A] transition-colors"
                 >
-                  Sri Lankan Sapphires & Ceylon
+                  Natural Royal Blue & Fine Sapphires
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => { setCurrentPage('sapphires'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-                  className="hover:text-[#F0D27A] transition-colors"
-                >
-                  Ceylon Padparadscha
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => { setCurrentPage('rough'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  onClick={() => { setCurrentPage('gemstones'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                   className="hover:text-[#F0D27A] transition-colors"
                 >
                   Rough Gemstones & Parcels
@@ -197,7 +197,7 @@ export const Footer: React.FC<FooterProps> = ({
 
               <div className="flex items-start gap-2 pt-1 text-[#A7ADB5]">
                 <MapPin className="w-4 h-4 text-[#D6A83F] shrink-0 mt-0.5" />
-                <span>Direct Operations: East Africa & Colombo, Sri Lanka</span>
+                <span>Direct Operations: East Africa & International Desks</span>
               </div>
             </div>
           </div>

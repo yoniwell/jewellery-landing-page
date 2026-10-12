@@ -7,7 +7,6 @@ interface RoughPageProps {
   onSelectStone: (stone: Gemstone) => void;
   onOpenInquiry: (stoneName?: string) => void;
   onOpenWhatsAppWithStone: (stoneName: string) => void;
-  onViewCertificate: (stone: Gemstone) => void;
 }
 
 export const RoughPage: React.FC<RoughPageProps> = ({
@@ -15,7 +14,6 @@ export const RoughPage: React.FC<RoughPageProps> = ({
   onSelectStone,
   onOpenInquiry,
   onOpenWhatsAppWithStone,
-  onViewCertificate,
 }) => {
   const [activeSubcategory, setActiveSubcategory] = useState<string>('ALL');
   const [statusFilter, setStatusFilter] = useState<string>('ALL');

@@ -2,10 +2,16 @@ import React from 'react';
 import { ArrowUpRight, Sparkles } from 'lucide-react';
 
 interface OurCollectionsProps {
-  onNavigateToCategory: (category: string) => void;
+  onNavigateToCategory?: (category: string) => void;
+  onNavigateToGemstones?: () => void;
 }
 
-export const OurCollections: React.FC<OurCollectionsProps> = ({ onNavigateToCategory }) => {
+export const OurCollections: React.FC<OurCollectionsProps> = ({ onNavigateToCategory, onNavigateToGemstones }) => {
+  const handleNavigate = () => {
+    if (onNavigateToGemstones) onNavigateToGemstones();
+    else if (onNavigateToCategory) onNavigateToCategory('gemstones');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
   const collections = [
     {
       id: 'paraiba',
@@ -18,9 +24,9 @@ export const OurCollections: React.FC<OurCollectionsProps> = ({ onNavigateToCate
     },
     {
       id: 'sapphires',
-      title: 'Ceylon Sapphires',
-      description: 'Natural and treated Sri Lankan sapphires selected for color and quality.',
-      tag: 'SRI LANKAN SOURCE',
+      title: 'Natural Sapphires',
+      description: 'Natural fine sapphires selected for exceptional color, clarity, and quality.',
+      tag: 'FINE SAPPHIRES',
       image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=800&auto=format&fit=crop',
       accent: 'border-[#1755af]/40 group-hover:border-[#60a5fa]',
       glowColor: 'group-hover:shadow-[0_0_30px_rgba(23,85,175,0.3)]',
@@ -77,7 +83,7 @@ export const OurCollections: React.FC<OurCollectionsProps> = ({ onNavigateToCate
             Exceptional Gemstones, <span className="gold-gradient-text font-normal">Carefully Selected</span>
           </h2>
           <p className="text-xs sm:text-sm md:text-base text-[#A7ADB5] font-light">
-            Rare colored gemstones sourced directly from African and Sri Lankan deposits.
+            Rare colored gemstones sourced directly from ethical primary deposits.
           </p>
           <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#D6A83F] to-transparent mx-auto mt-3" />
         </div>
@@ -87,13 +93,7 @@ export const OurCollections: React.FC<OurCollectionsProps> = ({ onNavigateToCate
           {collections.map((col, index) => (
             <div
               key={col.id}
-              onClick={() => {
-                if (col.id === 'paraiba') onNavigateToCategory('paraiba');
-                else if (col.id === 'sapphires') onNavigateToCategory('sapphires');
-                else if (col.id === 'rough') onNavigateToCategory('rough');
-                else onNavigateToCategory(col.id);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
+              onClick={handleNavigate}
               className={`group relative rounded-xl overflow-hidden bg-[#071522] border transition-all duration-300 cursor-pointer flex flex-col justify-between ${col.accent} ${col.glowColor} active:scale-[0.99]`}
             >
               {/* Card Image Container */}
@@ -105,7 +105,7 @@ export const OurCollections: React.FC<OurCollectionsProps> = ({ onNavigateToCate
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#071522] via-[#071522]/30 to-transparent" />
                 
-                {/* Category Pill Tag */}
+                {/* Gemstone Specimen Tag */}
                 <div className="absolute top-2.5 left-2.5">
                   <span className="px-2 py-0.5 rounded bg-[#05080D]/85 border border-[#D6A83F]/30 text-[8px] sm:text-[9px] font-mono tracking-widest text-[#F0D27A] backdrop-blur-md">
                     {col.tag}

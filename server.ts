@@ -23,8 +23,8 @@ let galleryDb: GalleryItem[] = [...GALLERY_ITEMS];
 // Dynamic categories list manageable by the owner without a developer
 let categoriesDb: Array<{ id: string; name: string; slug: string; description: string; stoneCount?: number }> = [
   { id: 'cat-1', name: 'Ethiopian Paraíba Tourmaline', slug: 'paraiba', description: 'Electric neon copper-bearing cuprian tourmaline from Ethiopia.' },
-  { id: 'cat-2', name: 'Sri Lankan Sapphires', slug: 'sapphire', description: 'Natural Ceylon Royal Blue, Cornflower, and fancy colored corundum.' },
-  { id: 'cat-3', name: 'Ceylon Padparadscha', slug: 'padparadscha', description: 'Rare lotus-color pinkish-orange Sri Lankan sapphire.' },
+  { id: 'cat-2', name: 'Sapphires', slug: 'sapphire', description: 'Natural Royal Blue, Cornflower, and fancy colored corundum.' },
+  { id: 'cat-3', name: 'Padparadscha', slug: 'padparadscha', description: 'Rare lotus-color pinkish-orange sapphire.' },
   { id: 'cat-4', name: 'Rough Gemstones', slug: 'rough', description: 'Direct mine crystal parcels for master lapidaries and investment.' },
   { id: 'cat-5', name: 'African Emeralds', slug: 'emerald', description: 'Deep saturated green beryl from Zambian and East African deposits.' },
   { id: 'cat-6', name: 'Rare & Collector Gemstones', slug: 'rare', description: 'Museum-grade collector stones (Spessartite, Rubies, Spinel, Alexandrite).' },
@@ -246,6 +246,33 @@ app.put('/api/gemstones/:id', requireAuth, (req: Request, res: Response) => {
   });
 
   return res.json({ success: true, data: updated });
+});
+
+app.delete('/api/gemstones', requireAuth, (req: Request, res: Response) => {
+  const count = gemstonesDb.length;
+  gemstonesDb = [];
+
+  activityLogs.unshift({
+    id: `act-${Date.now()}`,
+    action: `Cleared all ${count} demo stones from inventory`,
+    user: adminUser.name,
+    timestamp: new Date().toISOString().replace('T', ' ').substring(0, 16) + ' UTC',
+  });
+
+  return res.json({ success: true, message: `All ${count} stones deleted. Ready for real data input.`, count });
+});
+
+app.post('/api/gemstones/reset-real-data', requireAuth, (req: Request, res: Response) => {
+  gemstonesDb = [...INITIAL_GEMSTONES];
+
+  activityLogs.unshift({
+    id: `act-${Date.now()}`,
+    action: `Populated authentic African gemstone inventory (${gemstonesDb.length} specimens)`,
+    user: adminUser.name,
+    timestamp: new Date().toISOString().replace('T', ' ').substring(0, 16) + ' UTC',
+  });
+
+  return res.json({ success: true, message: 'Loaded authentic African gemstone inventory', data: gemstonesDb });
 });
 
 app.delete('/api/gemstones/:id', requireAuth, (req: Request, res: Response) => {

@@ -11,7 +11,6 @@ interface GemstoneDetailModalProps {
   onClose: () => void;
   onOpenInquiry: (stoneName: string) => void;
   onOpenWhatsAppWithStone: (stoneName: string) => void;
-  onViewCertificate: (stone: Gemstone) => void;
 }
 
 export const GemstoneDetailModal: React.FC<GemstoneDetailModalProps> = ({
@@ -20,7 +19,6 @@ export const GemstoneDetailModal: React.FC<GemstoneDetailModalProps> = ({
   onClose,
   onOpenInquiry,
   onOpenWhatsAppWithStone,
-  onViewCertificate,
 }) => {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isLoupeActive, setIsLoupeActive] = useState(false);
@@ -141,30 +139,6 @@ export const GemstoneDetailModal: React.FC<GemstoneDetailModalProps> = ({
                 </button>
               ))}
             </div>
-
-            {/* Certificate badge if available */}
-            {stone.certificate && (
-              <div className="p-3 sm:p-4 rounded-xl bg-[#05080D] border border-[#D6A83F]/30 flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
-                  <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-[#D6A83F] shrink-0" />
-                  <div className="min-w-0">
-                    <span className="text-[11px] sm:text-xs font-mono font-bold text-[#F7F5EF] block truncate">
-                      {stone.certificate.laboratory} Certified Report
-                    </span>
-                    <span className="text-[10px] sm:text-[11px] font-mono text-[#A7ADB5] block truncate">
-                      Report #{stone.certificate.reportNumber}
-                    </span>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => onViewCertificate(stone)}
-                  className="px-2.5 sm:px-3 py-1.5 rounded bg-[#0B2745] hover:bg-[#D6A83F]/20 text-[#F0D27A] border border-[#D6A83F]/40 text-[11px] sm:text-xs font-mono font-medium transition-colors cursor-pointer shrink-0 min-h-[36px]"
-                >
-                  View Report →
-                </button>
-              </div>
-            )}
 
           </div>
 

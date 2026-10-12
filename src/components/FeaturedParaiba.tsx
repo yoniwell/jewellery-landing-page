@@ -7,7 +7,6 @@ interface FeaturedParaibaProps {
   onViewCollection: () => void;
   onInquireStone: (stoneName?: string) => void;
   onSelectStone: (stone: Gemstone) => void;
-  onOpenCertificate: (stone: Gemstone) => void;
 }
 
 export const FeaturedParaiba: React.FC<FeaturedParaibaProps> = ({
@@ -15,7 +14,6 @@ export const FeaturedParaiba: React.FC<FeaturedParaibaProps> = ({
   onViewCollection,
   onInquireStone,
   onSelectStone,
-  onOpenCertificate,
 }) => {
   const [selectedSpecimen, setSelectedSpecimen] = useState<Gemstone>(paraibaStones[0] || {} as Gemstone);
 
@@ -131,19 +129,12 @@ export const FeaturedParaiba: React.FC<FeaturedParaibaProps> = ({
                   </div>
                 </div>
 
-                {/* Certificate & Quick Contact Bar */}
+                {/* Quick Info & Action Bar */}
                 <div className="mt-3 pt-2.5 border-t border-[#0B2745] flex items-center justify-between text-xs">
-                  {selectedSpecimen.certificate ? (
-                    <button
-                      onClick={() => onOpenCertificate(selectedSpecimen)}
-                      className="text-[11px] sm:text-xs text-[#D6A83F] hover:text-[#F0D27A] flex items-center gap-1 font-mono cursor-pointer"
-                    >
-                      <Shield className="w-3.5 h-3.5" />
-                      <span>{selectedSpecimen.certificate.laboratory} Report #{selectedSpecimen.certificate.reportNumber}</span>
-                    </button>
-                  ) : (
-                    <span className="text-[11px] text-[#A7ADB5] font-mono">Natural Cuprian Certified</span>
-                  )}
+                  <span className="text-[11px] text-[#A7ADB5] font-mono flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#25D366]" />
+                    <span>Direct Mine Specimen</span>
+                  </span>
 
                   <button
                     onClick={() => onInquireStone(selectedSpecimen.name)}

@@ -7,9 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { HeroSection } from './components/HeroSection';
 import { TrustStrip } from './components/TrustStrip';
-import { OurCollections } from './components/OurCollections';
-import { FeaturedParaiba } from './components/FeaturedParaiba';
-import { FeaturedSapphires } from './components/FeaturedSapphires';
+import { HomeGemstoneVault } from './components/HomeGemstoneVault';
 import { SourcingStory } from './components/SourcingStory';
 import { CuttingPolishingStory } from './components/CuttingPolishingStory';
 import { GallerySection } from './components/GallerySection';
@@ -17,17 +15,14 @@ import { InternationalBuyersSection } from './components/InternationalBuyersSect
 import { Footer } from './components/Footer';
 import { FloatingWhatsApp } from './components/FloatingWhatsApp';
 import { BuyerInquiryModal } from './components/BuyerInquiryModal';
-import { GemstoneDetailModal } from './components/GemstoneDetailModal';
-import { CertificateModal } from './components/CertificateModal';
 
 // Dedicated Admin Components
 import { AdminLoginPage } from './components/admin/AdminLoginPage';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 
 // Pages
-import { ParaibaPage } from './pages/ParaibaPage';
-import { SapphiresPage } from './pages/SapphiresPage';
-import { RoughPage } from './pages/RoughPage';
+import { GemstonesPage } from './pages/GemstonesPage';
+import { GemstoneInspectionPage } from './pages/GemstoneInspectionPage';
 import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
 
@@ -38,6 +33,7 @@ import { api } from './services/api';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<string>('home');
+  const [previousPage, setPreviousPage] = useState<string>('home');
   const [gemstones, setGemstones] = useState<Gemstone[]>(INITIAL_GEMSTONES);
   const [inquiries, setInquiries] = useState<BuyerInquiry[]>(INITIAL_INQUIRIES);
 
@@ -49,21 +45,14 @@ export default function App() {
   const [inquiryModalOpen, setInquiryModalOpen] = useState<boolean>(false);
   const [inquiryPrefillName, setInquiryPrefillName] = useState<string | undefined>(undefined);
 
-  const [detailModalOpen, setDetailModalOpen] = useState<boolean>(false);
   const [selectedStone, setSelectedStone] = useState<Gemstone | null>(null);
-
-  const [certificateModalOpen, setCertificateModalOpen] = useState<boolean>(false);
-  const [selectedCertificate, setSelectedCertificate] = useState<{ certificate: GemCertificate | null; stoneName: string }>({
-    certificate: null,
-    stoneName: '',
-  });
 
   // Fetch initial data & verify session on mount
   useEffect(() => {
     const loadInitialData = async () => {
       try {
         const stones = await api.getGemstones();
-        if (stones && stones.length > 0) {
+        if (Array.isArray(stones)) {
           setGemstones(stones);
         }
       } catch (err) {
@@ -115,21 +104,14 @@ export default function App() {
     }
   };
 
-  // Stone Selection Handler
+  // Stone Selection Handler - Navigates directly to dedicated full Inspection Page
   const handleSelectStone = (stone: Gemstone) => {
     setSelectedStone(stone);
-    setDetailModalOpen(true);
-  };
-
-  // Certificate Handler
-  const handleViewCertificate = (stone: Gemstone) => {
-    if (stone.certificate) {
-      setSelectedCertificate({
-        certificate: stone.certificate,
-        stoneName: stone.name,
-      });
-      setCertificateModalOpen(true);
+    if (currentPage !== 'inspect') {
+      setPreviousPage(currentPage);
     }
+    setCurrentPage('inspect');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Admin Navigation Trigger
@@ -150,10 +132,6 @@ export default function App() {
     setIsAuthenticated(false);
     setCurrentPage('home');
   };
-
-  // Filtered collections
-  const paraibaStones = gemstones.filter((g) => g.category === 'paraiba' || g.subCategory === 'Rough Paraíba Tourmaline');
-  const sapphireStones = gemstones.filter((g) => g.category === 'sapphire' || g.category === 'padparadscha');
 
   // IF ADMIN ROUTE IS ACTIVE
   if (currentPage === 'admin') {
@@ -205,8 +183,9 @@ export default function App() {
           <>
             {/* 1 & 2. Hero Gemstone Image & Main Headline strictly from Brief */}
             <HeroSection
+              gemstones={gemstones}
               onExploreParaiba={() => {
-                setCurrentPage('paraiba');
+                setCurrentPage('gemstones');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               onContactUs={() => {
@@ -220,44 +199,25 @@ export default function App() {
             {/* 3. Trust Strip (4 gold icon points) */}
             <TrustStrip />
 
-            {/* 4. Our Collections (6 cards) */}
-            <OurCollections
-              onNavigateToCategory={(cat) => {
-                setCurrentPage(cat);
+            {/* 4. Live Gemstone Vault Showcase (Comprehensive & Category-Free) */}
+            <HomeGemstoneVault
+              gemstones={gemstones}
+              onSelectStone={handleSelectStone}
+              onInquireStone={handleOpenInquiry}
+              onViewAllStones={() => {
+                setCurrentPage('gemstones');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
             />
 
-            {/* 5 & 6. About Abel Gemstone & Direct From African Sources */}
+            {/* 5. Provenance & Direct From African Sources */}
             <SourcingStory />
 
-            {/* 7. Ethiopian Paraíba Tourmaline Featured Section */}
-            <FeaturedParaiba
-              paraibaStones={paraibaStones}
-              onViewCollection={() => {
-                setCurrentPage('paraiba');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              onInquireStone={handleOpenInquiry}
-              onSelectStone={handleSelectStone}
-              onOpenCertificate={handleViewCertificate}
-            />
-
-            {/* 8. Sri Lankan Sapphires Featured Section */}
-            <FeaturedSapphires
-              sapphireStones={sapphireStones}
-              onViewSapphiresPage={() => {
-                setCurrentPage('sapphires');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              onSelectStone={handleSelectStone}
-              onInquireStone={handleOpenInquiry}
-            />
-
-            {/* 9. Lapidary Workshop: ROUGH → CUTTING → FINISHED GEMSTONE */}
+            {/* 6. Lapidary Workshop: ROUGH → CUTTING → FINISHED GEMSTONE */}
             <CuttingPolishingStory />
 
             {/* 10. Luxury Lightbox Gallery */}
-            <GallerySection onInquireItem={(title) => handleOpenInquiry(title)} />
+            <GallerySection gemstones={gemstones} onInquireItem={(title) => handleOpenInquiry(title)} />
 
             {/* 11 & 12. International Buyers Section, Commitment & Homepage Final Section */}
             <InternationalBuyersSection
@@ -267,36 +227,13 @@ export default function App() {
           </>
         )}
 
-        {/* DEDICATED PARAIBA COMMERCIAL PAGE */}
-        {currentPage === 'paraiba' && (
-          <ParaibaPage
+        {/* UNIFIED DEDICATED GEMSTONES COLLECTION PAGE */}
+        {(currentPage === 'gemstones' || currentPage === 'collection' || currentPage === 'paraiba' || currentPage === 'sapphires' || currentPage === 'rough') && (
+          <GemstonesPage
             gemstones={gemstones}
             onSelectStone={handleSelectStone}
             onOpenInquiry={handleOpenInquiry}
             onOpenWhatsAppWithStone={handleOpenWhatsAppWithStone}
-            onViewCertificate={handleViewCertificate}
-          />
-        )}
-
-        {/* DEDICATED SAPPHIRES & PADPARADSCHA PAGE */}
-        {currentPage === 'sapphires' && (
-          <SapphiresPage
-            gemstones={gemstones}
-            onSelectStone={handleSelectStone}
-            onOpenInquiry={handleOpenInquiry}
-            onOpenWhatsAppWithStone={handleOpenWhatsAppWithStone}
-            onViewCertificate={handleViewCertificate}
-          />
-        )}
-
-        {/* DEDICATED ROUGH GEMSTONES PAGE */}
-        {currentPage === 'rough' && (
-          <RoughPage
-            gemstones={gemstones}
-            onSelectStone={handleSelectStone}
-            onOpenInquiry={handleOpenInquiry}
-            onOpenWhatsAppWithStone={handleOpenWhatsAppWithStone}
-            onViewCertificate={handleViewCertificate}
           />
         )}
 
@@ -311,8 +248,24 @@ export default function App() {
         {/* DEDICATED GALLERY FULL PAGE */}
         {currentPage === 'gallery' && (
           <div className="pt-28 pb-12">
-            <GallerySection onInquireItem={(title) => handleOpenInquiry(title)} />
+            <GallerySection gemstones={gemstones} onInquireItem={(title) => handleOpenInquiry(title)} />
           </div>
+        )}
+
+        {/* DEDICATED FULL-PAGE GEMSTONE INSPECTION PAGE */}
+        {currentPage === 'inspect' && (
+          <GemstoneInspectionPage
+            stone={selectedStone}
+            allStones={gemstones}
+            onBack={() => {
+              setCurrentPage(previousPage || 'home');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onSelectStone={handleSelectStone}
+            onOpenInquiry={handleOpenInquiry}
+            onOpenWhatsAppWithStone={handleOpenWhatsAppWithStone}
+            previousPageName={previousPage === 'gemstones' || previousPage === 'collection' ? 'Collection' : 'Home'}
+          />
         )}
 
         {/* DEDICATED CONTACT & INQUIRY PAGE */}
@@ -343,22 +296,6 @@ export default function App() {
         prefillStoneName={inquiryPrefillName}
         onSubmitInquiry={handleSubmitInquiry}
         onOpenWhatsApp={() => handleOpenWhatsApp()}
-      />
-
-      <GemstoneDetailModal
-        stone={selectedStone}
-        isOpen={detailModalOpen}
-        onClose={() => setDetailModalOpen(false)}
-        onOpenInquiry={(stoneName) => handleOpenInquiry(stoneName)}
-        onOpenWhatsAppWithStone={handleOpenWhatsAppWithStone}
-        onViewCertificate={handleViewCertificate}
-      />
-
-      <CertificateModal
-        certificate={selectedCertificate.certificate}
-        stoneName={selectedCertificate.stoneName}
-        isOpen={certificateModalOpen}
-        onClose={() => setCertificateModalOpen(false)}
       />
 
     </div>

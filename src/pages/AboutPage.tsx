@@ -1,6 +1,5 @@
 import React from 'react';
-import { Compass, Disc, ShieldCheck, MapPin, CheckCircle2, ArrowRight } from 'lucide-react';
-import { CuttingPolishingStory } from '../components/CuttingPolishingStory';
+import { Compass, MapPin, CheckCircle2 } from 'lucide-react';
 import { SourcingStory } from '../components/SourcingStory';
 
 interface AboutPageProps {
@@ -36,11 +35,8 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenInquiry, onOpenWhats
         </div>
       </div>
 
-      {/* Sourcing Narrative Component */}
+      {/* Sourcing Narrative Component with Authenticated Gemstone Image Card */}
       <SourcingStory />
-
-      {/* Cutting & Polishing Lapidary Component */}
-      <CuttingPolishingStory />
 
       {/* Trust & Transparency Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
@@ -49,7 +45,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenInquiry, onOpenWhats
             Direct Consultation with Our <span className="gold-gradient-text font-normal">Sourcing Principals</span>
           </h3>
           <p className="text-sm text-[#A7ADB5] max-w-2xl mx-auto font-light leading-relaxed">
-            Whether you require rough crystal parcels or calibrated museum stones with GIA / SSEF / Gübelin / GRS origin reports, contact us directly.
+            Whether you require rough crystal parcels or finished museum gemstones direct from primary African deposits, contact us directly.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
             <button
