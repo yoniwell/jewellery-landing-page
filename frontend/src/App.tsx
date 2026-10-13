@@ -27,12 +27,13 @@ import { ContactPage } from './pages/ContactPage';
 
 // Data & API Service
 import { Gemstone, BuyerInquiry, GemCertificate } from './types/gemstone';
+import { INITIAL_GEMSTONES } from './data/gemstoneInventory';
 import { api } from './services/api';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<string>('home');
   const [previousPage, setPreviousPage] = useState<string>('home');
-  const [gemstones, setGemstones] = useState<Gemstone[]>([]);
+  const [gemstones, setGemstones] = useState<Gemstone[]>(INITIAL_GEMSTONES);
   const [inquiries, setInquiries] = useState<BuyerInquiry[]>([]);
 
   // Admin Auth State
@@ -50,11 +51,14 @@ export default function App() {
     const loadInitialData = async () => {
       try {
         const stones = await api.getGemstones();
-        if (Array.isArray(stones)) {
+        if (Array.isArray(stones) && stones.length > 0) {
           setGemstones(stones);
+        } else {
+          setGemstones(INITIAL_GEMSTONES);
         }
       } catch (err) {
-        console.warn('API init: No gemstones fetched or server error', err);
+        console.warn('API init: No gemstones fetched or server error, using local inventory', err);
+        setGemstones(INITIAL_GEMSTONES);
       }
 
       try {
