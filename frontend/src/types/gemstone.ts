@@ -44,7 +44,7 @@ export interface Gemstone {
   name: string;
   category: GemstoneCategory;
   subCategory?: string;
-  weightCarats: number;
+  weightCarats?: number;
   dimensions: string; // e.g., "9.45 x 7.82 x 5.12 mm"
   shapeCut: string; // e.g., "Cushion Modified Brilliant", "Oval Faceted", "Natural Octahedral Crystal"
   color: string; // e.g., "Electric Neon Blue-Green", "Velvety Royal Blue", "Sunset Lotus Pink-Orange"

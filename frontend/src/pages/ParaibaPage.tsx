@@ -144,9 +144,6 @@ export const ParaibaPage: React.FC<ParaibaPageProps> = ({
                 {/* Top Badges */}
                 <div className="absolute top-2.5 left-2.5 flex gap-1.5">
                   <span className="px-2 py-0.5 rounded bg-[#05080D]/85 text-[#14f1ce] text-[9px] font-mono border border-[#14f1ce]/40 backdrop-blur-md">
-                    {stone.weightCarats} ct
-                  </span>
-                  <span className="px-2 py-0.5 rounded bg-[#05080D]/85 text-[#F0D27A] text-[9px] font-mono border border-[#D6A83F]/30 backdrop-blur-md">
                     {stone.shapeCut}
                   </span>
                 </div>

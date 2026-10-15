@@ -143,12 +143,14 @@ export const RoughPage: React.FC<RoughPageProps> = ({
                 <div className="absolute inset-0 bg-gradient-to-t from-[#071522] via-transparent to-transparent opacity-80" />
 
                 <div className="absolute top-2.5 left-2.5 flex gap-1.5">
-                  <span className="px-2 py-0.5 rounded bg-[#05080D]/85 text-[#F0D27A] text-[9px] font-mono border border-[#D6A83F]/40 backdrop-blur-sm">
-                    {stone.weightCarats} ct
-                  </span>
                   <span className="px-2 py-0.5 rounded bg-[#05080D]/85 text-[#14f1ce] text-[9px] font-mono border border-[#14f1ce]/30 backdrop-blur-sm">
                     ROUGH CRYSTAL
                   </span>
+                  {stone.shapeCut && (
+                    <span className="px-2 py-0.5 rounded bg-[#05080D]/85 text-[#F0D27A] text-[9px] font-mono border border-[#D6A83F]/40 backdrop-blur-sm">
+                      {stone.shapeCut}
+                    </span>
+                  )}
                 </div>
 
                 <div className="absolute top-2.5 right-2.5">

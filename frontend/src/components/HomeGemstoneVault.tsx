@@ -17,7 +17,7 @@ export const HomeGemstoneVault: React.FC<HomeGemstoneVaultProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'AVAILABLE' | 'RESERVED'>('ALL');
-  const [sortBy, setSortBy] = useState<'featured' | 'carat-desc' | 'carat-asc' | 'newest'>('featured');
+  const [sortBy, setSortBy] = useState<'featured' | 'name' | 'newest'>('featured');
 
   // Filter and sort stones
   const filteredStones = useMemo(() => {
@@ -42,8 +42,7 @@ export const HomeGemstoneVault: React.FC<HomeGemstoneVaultProps> = ({
 
     // Sorting
     result.sort((a, b) => {
-      if (sortBy === 'carat-desc') return b.weightCarats - a.weightCarats;
-      if (sortBy === 'carat-asc') return a.weightCarats - b.weightCarats;
+      if (sortBy === 'name') return a.name.localeCompare(b.name);
       if (sortBy === 'newest') return new Date(b.dateAdded || '').getTime() - new Date(a.dateAdded || '').getTime();
       // Default: featured first
       if (a.featured && !b.featured) return -1;
@@ -171,8 +170,7 @@ export const HomeGemstoneVault: React.FC<HomeGemstoneVaultProps> = ({
                 className="px-2.5 py-1.5 rounded-lg bg-[#05080D] border border-[#0B2745] text-[11px] sm:text-xs text-[#F7F5EF] focus:border-[#D6A83F] focus:outline-none cursor-pointer"
               >
                 <option value="featured">Featured First</option>
-                <option value="carat-desc">Carat: High to Low</option>
-                <option value="carat-asc">Carat: Low to High</option>
+                <option value="name">Name: A to Z</option>
                 <option value="newest">Recently Added</option>
               </select>
             </div>
@@ -247,7 +245,7 @@ export const HomeGemstoneVault: React.FC<HomeGemstoneVaultProps> = ({
                       </span>
 
                       <span className="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-[#05080D]/85 text-[#F0D27A] border border-[#D6A83F]/40 backdrop-blur-md">
-                        {stone.weightCarats.toFixed(2)} ct
+                        {stone.shapeCut}
                       </span>
                     </div>
                   </div>

@@ -278,7 +278,7 @@ export const GemstoneInspectionPage: React.FC<GemstoneInspectionPageProps> = ({
                   {/* Bottom Quick Spec Overlay */}
                   <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs font-mono bg-[#05080D]/90 px-3.5 py-2 rounded-xl border border-[#0B2745] backdrop-blur-md">
                     <span className="text-[#14f1ce] font-medium truncate pr-2">{currentStone.color}</span>
-                    <span className="text-[#F0D27A] font-bold shrink-0">{currentStone.weightCarats} ct</span>
+                    <span className="text-[#F0D27A] font-bold shrink-0">{currentStone.shapeCut}</span>
                   </div>
                 </>
               )}
@@ -358,7 +358,7 @@ export const GemstoneInspectionPage: React.FC<GemstoneInspectionPageProps> = ({
                 {currentStone.name}
               </h1>
               <p className="text-xs sm:text-sm font-mono text-[#14f1ce]">
-                {currentStone.weightCarats} Carats · {currentStone.shapeCut} · {currentStone.color}
+                {currentStone.shapeCut} · {currentStone.color}
               </p>
             </div>
 
@@ -423,10 +423,6 @@ export const GemstoneInspectionPage: React.FC<GemstoneInspectionPageProps> = ({
               </h3>
               
               <div className="rounded-xl border border-[#0B2745] bg-[#05080D] divide-y divide-[#0B2745] text-xs font-mono">
-                <div className="p-3 flex justify-between items-center">
-                  <span className="text-[#A7ADB5]">Carat Weight</span>
-                  <span className="text-[#F7F5EF] font-bold">{currentStone.weightCarats} ct</span>
-                </div>
                 <div className="p-3 flex justify-between items-center">
                   <span className="text-[#A7ADB5]">Shape & Cut</span>
                   <span className="text-[#F7F5EF]">{currentStone.shapeCut}</span>
@@ -562,7 +558,7 @@ export const GemstoneInspectionPage: React.FC<GemstoneInspectionPageProps> = ({
                       </span>
                     </div>
                     <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-[#05080D]/80 backdrop-blur-md text-[10px] font-mono text-[#F0D27A] font-bold border border-[#0B2745]">
-                      {item.weightCarats} ct
+                      {item.shapeCut}
                     </div>
                   </div>
 

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "start": "tsx src/server.ts",
-    "build": "tsc",
+    "build": "tsc && node scripts/copy-assets.js",
     "db:init": "tsx src/db/init.ts",
     "db:seed": "tsx src/db/seed.ts"
   },

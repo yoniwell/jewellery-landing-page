@@ -296,12 +296,12 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                     </div>
 
                     <div>
-                      <label className="block text-[#A7ADB5] mb-1 text-[11px] sm:text-xs">Approximate Carat</label>
+                      <label className="block text-[#A7ADB5] mb-1 text-[11px] sm:text-xs">Desired Size / Quantity</label>
                       <input
                         type="text"
                         value={formData.approximateCarat}
                         onChange={(e) => setFormData({ ...formData, approximateCarat: e.target.value })}
-                        placeholder="e.g. 2 - 5 ct"
+                        placeholder="e.g. 10x8mm or 5-piece parcel"
                         className="w-full p-2.5 rounded-lg bg-[#05080D] border border-[#0B2745] text-[#F7F5EF] outline-none focus:border-[#D6A83F] min-h-[42px]"
                       />
                     </div>

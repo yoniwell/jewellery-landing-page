@@ -99,7 +99,7 @@ export const FeaturedParaiba: React.FC<FeaturedParaibaProps> = ({
                       ETHIOPIAN CUPRIAN
                     </span>
                     <span className="px-2 py-0.5 rounded bg-[#05080D]/80 text-[#F0D27A] text-[9px] font-mono border border-[#D6A83F]/40 font-bold">
-                      {selectedSpecimen.weightCarats} ct
+                      {selectedSpecimen.shapeCut}
                     </span>
                   </div>
 
@@ -200,7 +200,7 @@ export const FeaturedParaiba: React.FC<FeaturedParaibaProps> = ({
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-mono text-[#14f1ce] font-bold">
-                    {stone.weightCarats} ct • {stone.shapeCut}
+                    {stone.shapeCut}
                   </span>
                   <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded font-bold border ${
                     stone.status === 'AVAILABLE' ? 'bg-[#25D366]/10 text-[#25D366] border-[#25D366]/30' :

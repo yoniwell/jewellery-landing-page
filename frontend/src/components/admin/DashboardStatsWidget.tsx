@@ -21,7 +21,6 @@ export const DashboardStatsWidget: React.FC<DashboardStatsWidgetProps> = ({
   const reservedStones = gemstones.filter((g) => g.status === 'RESERVED').length;
   const soldStones = gemstones.filter((g) => g.status === 'SOLD').length;
   const comingSoonStones = gemstones.filter((g) => g.status === 'COMING SOON').length;
-  const totalCarats = gemstones.reduce((sum, g) => sum + (g.weightCarats || 0), 0);
   const totalValuation = gemstones.reduce((sum, g) => sum + (g.priceUsd || 0), 0);
   const roughStones = gemstones.filter((g) => g.isRough).length;
   const finishedStones = totalStones - roughStones;
@@ -89,7 +88,7 @@ export const DashboardStatsWidget: React.FC<DashboardStatsWidgetProps> = ({
                 {totalStones}
               </span>
               <span className="text-xs font-mono text-amber-700 font-bold">
-                Specimens ({totalCarats.toFixed(2)} ct)
+                Specimens in Vault
               </span>
             </div>
 
@@ -259,7 +258,7 @@ export const DashboardStatsWidget: React.FC<DashboardStatsWidgetProps> = ({
           <div className="space-y-1.5 text-xs font-mono">
             <div className="flex justify-between text-slate-500 text-[10px]">
               <span>MINED & VAULTED</span>
-              <span className="text-emerald-700 font-bold">{totalCarats.toFixed(1)} Total Carats</span>
+              <span className="text-emerald-700 font-bold">{totalStones} Total Specimens</span>
             </div>
             <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden border border-slate-300">
               <div className="h-full bg-gradient-to-r from-teal-500 to-amber-500 w-full" />

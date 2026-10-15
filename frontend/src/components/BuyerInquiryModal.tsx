@@ -236,16 +236,16 @@ export const BuyerInquiryModal: React.FC<BuyerInquiryModalProps> = ({
                 </select>
               </div>
 
-              {/* Approximate Carat / Weight */}
+              {/* Approximate Desired Size / Quantity */}
               <div>
                 <label className="block text-[11px] sm:text-xs font-mono uppercase tracking-wider text-[#A7ADB5] mb-1">
-                  Approx. Carat / Weight
+                  Approx. Desired Size / Quantity
                 </label>
                 <input
                   type="text"
                   value={formData.approximateCarat}
                   onChange={(e) => setFormData({ ...formData, approximateCarat: e.target.value })}
-                  placeholder="e.g. 3 - 5 ct or 50+ ct Parcel"
+                  placeholder="e.g. 10x8mm or 5-piece Parcel"
                   className="w-full px-3.5 py-2.5 rounded-lg bg-[#05080D] border border-[#0B2745] focus:border-[#D6A83F] text-xs text-[#F7F5EF] outline-none transition-colors min-h-[42px]"
                 />
               </div>

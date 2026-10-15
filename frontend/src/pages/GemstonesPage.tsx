@@ -17,7 +17,7 @@ export const GemstonesPage: React.FC<GemstonesPageProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
-  const [sortBy, setSortBy] = useState<'featured' | 'carat-desc' | 'carat-asc' | 'name'>('featured');
+  const [sortBy, setSortBy] = useState<'featured' | 'name' | 'newest'>('featured');
 
   const filteredAndSortedStones = useMemo(() => {
     let result = gemstones.filter((stone) => {
@@ -35,12 +35,10 @@ export const GemstonesPage: React.FC<GemstonesPageProps> = ({
       return matchSearch && matchStatus;
     });
 
-    if (sortBy === 'carat-desc') {
-      result.sort((a, b) => b.weightCarats - a.weightCarats);
-    } else if (sortBy === 'carat-asc') {
-      result.sort((a, b) => a.weightCarats - b.weightCarats);
-    } else if (sortBy === 'name') {
+    if (sortBy === 'name') {
       result.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortBy === 'newest') {
+      result.sort((a, b) => new Date(b.dateAdded || '').getTime() - new Date(a.dateAdded || '').getTime());
     }
 
     return result;
@@ -142,9 +140,8 @@ export const GemstonesPage: React.FC<GemstonesPageProps> = ({
                 className="bg-[#05080D] border border-[#0B2745] text-xs text-[#F7F5EF] rounded-lg px-3 py-2 font-mono focus:border-[#D6A83F]/60 focus:outline-none cursor-pointer"
               >
                 <option value="featured">Featured Order</option>
-                <option value="carat-desc">Carats: High to Low</option>
-                <option value="carat-asc">Carats: Low to High</option>
                 <option value="name">Name (A–Z)</option>
+                <option value="newest">Recently Added</option>
               </select>
             </div>
           </div>
@@ -237,10 +234,10 @@ export const GemstonesPage: React.FC<GemstonesPageProps> = ({
                       </span>
                     </div>
 
-                    {/* Weight Badge */}
+                    {/* Shape / Cut Badge */}
                     <div className="absolute top-3 right-3">
                       <span className="px-2.5 py-1 rounded bg-[#05080D]/85 text-[#F0D27A] text-[10px] font-mono border border-[#D6A83F]/40 backdrop-blur-md font-bold">
-                        {stone.weightCarats} ct
+                        {stone.shapeCut}
                       </span>
                     </div>
                   </div>
@@ -325,7 +322,7 @@ export const GemstonesPage: React.FC<GemstonesPageProps> = ({
             Looking for a Specific Gemstone or Parcel?
           </h2>
           <p className="text-xs sm:text-sm text-[#A7ADB5] max-w-2xl mx-auto font-light leading-relaxed">
-            Our direct mining relationships and local lapidary operations allow us to fulfill specific dealer, collector, and high-jewelry requirements across cut styles, carat sizes, and rare colors.
+            Our direct mining relationships and local lapidary operations allow us to fulfill specific dealer, collector, and high-jewelry requirements across cut styles, custom dimensions, and rare colors.
           </p>
           <div className="pt-2 flex flex-wrap justify-center gap-4">
             <button

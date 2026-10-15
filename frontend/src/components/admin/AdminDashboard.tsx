@@ -751,7 +751,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         {/* Bottom Overlay Info Strip */}
                         <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-[11px] font-mono text-white">
                           <span className="font-bold text-amber-300 bg-slate-950/60 px-2 py-0.5 rounded">
-                            {stone.weightCarats} ct
+                            {stone.shapeCut}
                           </span>
                           <span className="truncate max-w-[140px] text-right bg-slate-950/60 px-2 py-0.5 rounded">
                             {stone.origin}
@@ -827,7 +827,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     <thead className="bg-slate-50 text-slate-600 border-b border-slate-200 uppercase text-[11px] font-semibold">
                       <tr>
                         <th className="p-4">Specimen</th>
-                        <th className="p-4">Weight / Dimensions</th>
+                        <th className="p-4">Dimensions / Shape</th>
                         <th className="p-4">Color / Origin</th>
                         <th className="p-4">Availability</th>
                         <th className="p-4">Wholesale Price</th>
@@ -876,8 +876,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           </td>
 
                           <td className="p-4">
-                            <span className="font-bold text-slate-900 block">{stone.weightCarats} ct</span>
-                            <span className="text-[11px] text-slate-500">{stone.dimensions || 'N/A'}</span>
+                            <span className="font-bold text-slate-900 block">{stone.dimensions || 'N/A'}</span>
+                            <span className="text-[11px] text-slate-500">{stone.shapeCut}</span>
                           </td>
 
                           <td className="p-4">
@@ -966,7 +966,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 const stoneData: Partial<Gemstone> = {
                   name: form.stoneName.value,
                   category: form.category?.value || 'paraiba',
-                  weightCarats: parseFloat(form.weightCarats.value) || 1.0,
                   dimensions: form.dimensions.value,
                   shapeCut: form.shapeCut.value,
                   color: form.color.value,
@@ -1011,13 +1010,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400 font-medium">Core Parameters</span>
                 </div>
 
-                <div className="p-6 grid grid-cols-1 sm:grid-cols-3 gap-5 text-xs font-mono">
-                  <div className="sm:col-span-3">
+                <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-5 text-xs font-mono">
+                  <div className="sm:col-span-2">
                     <label className="block text-slate-900 font-bold uppercase tracking-wider text-[11px] mb-2">Specimen Title / Headline *</label>
                     <input
                       name="stoneName"
                       required
-                      placeholder="e.g. 5.20 ct Ethiopian Paraíba Tourmaline Cushion"
+                      placeholder="e.g. Ethiopian Paraíba Tourmaline Cushion"
                       className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-900 focus:border-slate-900 focus:ring-1 focus:ring-slate-900 outline-none transition-all placeholder:text-slate-400 font-mono text-xs"
                     />
                   </div>
@@ -1034,18 +1033,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <option value="SOLD">SOLD</option>
                       <option value="COMING SOON">COMING SOON</option>
                     </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-slate-900 font-bold uppercase tracking-wider text-[11px] mb-2">Carat Weight (ct) *</label>
-                    <input
-                      name="weightCarats"
-                      type="number"
-                      step="0.01"
-                      required
-                      placeholder="e.g. 5.20"
-                      className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-900 focus:border-slate-900 focus:ring-1 focus:ring-slate-900 outline-none transition-all placeholder:text-slate-400 font-mono text-xs"
-                    />
                   </div>
 
                   <div>
@@ -1429,8 +1416,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   </span>
                 </div>
 
-                <div className="p-6 grid grid-cols-1 sm:grid-cols-3 gap-5 text-xs font-mono">
-                  <div className="sm:col-span-3">
+                <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-5 text-xs font-mono">
+                  <div className="sm:col-span-2">
                     <label className="block text-slate-900 font-bold uppercase tracking-wider text-[11px] mb-2">Specimen Title / Headline *</label>
                     <input
                       value={editingStone.name}
@@ -1452,17 +1439,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                       <option value="SOLD">SOLD</option>
                       <option value="COMING SOON">COMING SOON</option>
                     </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-slate-900 font-bold uppercase tracking-wider text-[11px] mb-2">Carat Weight (ct)</label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={editingStone.weightCarats}
-                      onChange={(e) => setEditingStone({ ...editingStone, weightCarats: parseFloat(e.target.value) || 0 })}
-                      className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-200 text-slate-900 focus:border-slate-900 focus:ring-1 focus:ring-slate-900 outline-none transition-all font-mono text-xs"
-                    />
                   </div>
 
                   <div>

@@ -314,7 +314,7 @@ app.post('/api/gemstones', requireAuth, async (req: Request, res: Response) => {
       data.category === 'emerald' ? 'AG-EM' : 'AG-RS';
 
     const stoneId = data.id || `${prefix}-${Math.floor(100 + Math.random() * 900)}`;
-    const weightCarats = Number(data.weightCarats) || 1.0;
+    const weightCarats = data.weightCarats ? Number(data.weightCarats) : 0;
     const priceUsd =
       data.priceUsd !== undefined && data.priceUsd !== null && data.priceUsd !== ''
         ? Number(data.priceUsd)

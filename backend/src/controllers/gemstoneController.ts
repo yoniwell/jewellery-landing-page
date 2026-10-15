@@ -76,7 +76,7 @@ export const createGemstone = async (req: AuthRequest, res: Response) => {
 
     const stoneId = data.id || `${prefix}-${Math.floor(100 + Math.random() * 900)}`;
 
-    const weightCarats = Number(data.weightCarats) || 1.0;
+    const weightCarats = data.weightCarats ? Number(data.weightCarats) : 0;
     const priceUsd = data.priceUsd !== undefined && data.priceUsd !== null && data.priceUsd !== ''
       ? Number(data.priceUsd) 
       : null;

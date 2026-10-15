@@ -19,7 +19,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onInquireItem, g
           category: 'Natural Specimen' as any,
           imageUrl: img,
           thumbnailUrl: img,
-          description: `${g.weightCarats} ct • ${g.shapeCut} • ${g.color}`,
+          description: `${g.shapeCut} • ${g.color}`,
           origin: g.origin,
           isVideo: Boolean(g.videoUrl),
         }))
@@ -40,7 +40,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onInquireItem, g
           category: 'Natural Specimen' as any,
           imageUrl: img,
           thumbnailUrl: img,
-          description: `${g.weightCarats} ct • ${g.shapeCut} • ${g.color}`,
+          description: `${g.shapeCut} • ${g.color}`,
           origin: g.origin,
           isVideo: Boolean(g.videoUrl),
         }))

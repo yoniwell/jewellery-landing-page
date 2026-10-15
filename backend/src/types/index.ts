@@ -29,7 +29,7 @@ export interface Gemstone {
   name: string;
   category: GemstoneCategory;
   subCategory?: string;
-  weightCarats: number;
+  weightCarats?: number;
   dimensions: string;
   shapeCut: string;
   color: string;

@@ -76,7 +76,7 @@ export const FeaturedSapphires: React.FC<FeaturedSapphiresProps> = ({
                     {stone.subCategory || 'Natural Sapphire'}
                   </span>
                   <span className="px-2 py-0.5 rounded bg-[#05080D]/85 text-[#F0D27A] text-[9px] font-mono border border-[#D6A83F]/30 backdrop-blur-sm">
-                    {stone.weightCarats} ct
+                    {stone.origin || 'Ethiopia'}
                   </span>
                 </div>
 

@@ -139,7 +139,7 @@ export const GemstoneDetailModal: React.FC<GemstoneDetailModalProps> = ({
               {/* Bottom spec quick label */}
               <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-[11px] sm:text-xs font-mono bg-[#05080D]/90 p-2 sm:p-2.5 rounded-lg border border-[#0B2745] backdrop-blur-md pointer-events-none">
                 <span className="text-[#14f1ce] truncate pr-2">{stone.color}</span>
-                <span className="text-[#F0D27A] font-bold shrink-0">{stone.weightCarats} ct</span>
+                <span className="text-[#F0D27A] font-bold shrink-0">{stone.shapeCut}</span>
               </div>
             </div>
 
@@ -216,10 +216,6 @@ export const GemstoneDetailModal: React.FC<GemstoneDetailModalProps> = ({
 
               {/* Detailed Spec Sheet Table */}
               <div className="rounded-xl border border-[#0B2745] bg-[#05080D] divide-y divide-[#0B2745] text-[11px] sm:text-xs font-mono">
-                <div className="p-2.5 sm:p-3 flex justify-between">
-                  <span className="text-[#A7ADB5]">Carat Weight</span>
-                  <span className="text-[#F7F5EF] font-bold">{stone.weightCarats} ct</span>
-                </div>
                 <div className="p-2.5 sm:p-3 flex justify-between">
                   <span className="text-[#A7ADB5]">Shape & Cut</span>
                   <span className="text-[#F7F5EF]">{stone.shapeCut}</span>

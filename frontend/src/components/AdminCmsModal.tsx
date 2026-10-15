@@ -35,7 +35,6 @@ export const AdminCmsModal: React.FC<AdminCmsModalProps> = ({
     name: '',
     category: 'paraiba',
     subCategory: '',
-    weightCarats: 3.5,
     dimensions: '9.5 x 7.8 x 5.2 mm',
     shapeCut: 'Cushion Brilliant',
     color: 'Electric Neon Blue-Green',
@@ -61,7 +60,7 @@ export const AdminCmsModal: React.FC<AdminCmsModalProps> = ({
       name: newStone.name || 'New Selected Gemstone',
       category: newStone.category as GemstoneCategory || 'paraiba',
       subCategory: newStone.subCategory,
-      weightCarats: Number(newStone.weightCarats) || 1.0,
+      weightCarats: 0,
       dimensions: newStone.dimensions || 'N/A',
       shapeCut: newStone.shapeCut || 'Faceted',
       color: newStone.color || 'Vivid',
@@ -231,12 +230,11 @@ export const AdminCmsModal: React.FC<AdminCmsModalProps> = ({
                     </div>
 
                     <div>
-                      <label className="block text-[#A7ADB5] font-mono mb-1">Weight (ct)</label>
+                      <label className="block text-[#A7ADB5] font-mono mb-1">Dimensions</label>
                       <input
-                        type="number"
-                        step="0.01"
-                        value={editingStone.weightCarats}
-                        onChange={(e) => setEditingStone({ ...editingStone, weightCarats: parseFloat(e.target.value) || 0 })}
+                        type="text"
+                        value={editingStone.dimensions || ''}
+                        onChange={(e) => setEditingStone({ ...editingStone, dimensions: e.target.value })}
                         className="w-full p-2 rounded bg-[#071522] border border-[#0B2745] text-[#F7F5EF]"
                       />
                     </div>
@@ -260,7 +258,7 @@ export const AdminCmsModal: React.FC<AdminCmsModalProps> = ({
                   <thead className="bg-[#071522] text-[#A7ADB5] border-b border-[#0B2745] uppercase text-[10px]">
                     <tr>
                       <th className="p-3">Stone</th>
-                      <th className="p-3">Weight</th>
+                      <th className="p-3">Shape / Cut</th>
                       <th className="p-3">Color / Origin</th>
                       <th className="p-3">Status</th>
                       <th className="p-3">Wholesale Price</th>
@@ -277,7 +275,7 @@ export const AdminCmsModal: React.FC<AdminCmsModalProps> = ({
                             <span className="text-[10px] text-[#A7ADB5]">#{stone.id}</span>
                           </div>
                         </td>
-                        <td className="p-3 font-bold text-[#F0D27A]">{stone.weightCarats} ct</td>
+                        <td className="p-3 font-bold text-[#F0D27A]">{stone.shapeCut}</td>
                         <td className="p-3">
                           <span className="text-[#14f1ce] block">{stone.color}</span>
                           <span className="text-[10px] text-[#A7ADB5]">{stone.origin}</span>
@@ -358,17 +356,6 @@ export const AdminCmsModal: React.FC<AdminCmsModalProps> = ({
                   </select>
                 </div>
 
-                <div>
-                  <label className="block text-[#A7ADB5] mb-1">Carat Weight (ct) *</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    required
-                    value={newStone.weightCarats}
-                    onChange={(e) => setNewStone({ ...newStone, weightCarats: parseFloat(e.target.value) })}
-                    className="w-full p-2.5 rounded bg-[#05080D] border border-[#0B2745] text-[#F7F5EF]"
-                  />
-                </div>
 
                 <div>
                   <label className="block text-[#A7ADB5] mb-1">Shape / Cut *</label>

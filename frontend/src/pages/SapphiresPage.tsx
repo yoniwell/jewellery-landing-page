@@ -148,7 +148,7 @@ export const SapphiresPage: React.FC<SapphiresPageProps> = ({
 
                 <div className="absolute top-2.5 left-2.5 flex gap-1.5">
                   <span className="px-2 py-0.5 rounded bg-[#05080D]/85 text-[#60a5fa] text-[9px] font-mono border border-[#1755af]/50 backdrop-blur-sm">
-                    {stone.weightCarats} ct
+                    {stone.shapeCut}
                   </span>
                   <span className="px-2 py-0.5 rounded bg-[#05080D]/85 text-[#F0D27A] text-[9px] font-mono border border-[#D6A83F]/30 backdrop-blur-sm">
                     {stone.subCategory || 'Natural Sapphire'}

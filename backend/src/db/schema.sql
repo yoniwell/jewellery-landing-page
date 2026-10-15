@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS gemstones (
   name VARCHAR(255) NOT NULL,
   category VARCHAR(100) NOT NULL,
   sub_category VARCHAR(100) DEFAULT '',
-  weight_carats NUMERIC(10, 2) NOT NULL,
+  weight_carats NUMERIC(10, 2) DEFAULT 0,
   dimensions VARCHAR(100) DEFAULT 'N/A',
   shape_cut VARCHAR(100) DEFAULT 'Faceted',
   color VARCHAR(100) DEFAULT 'Vivid',
